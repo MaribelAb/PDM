@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:centaur_flutter/pages/login_page.dart';
+import 'package:centaur_flutter/pages/login_cliente.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:centaur_flutter/widgets/text_button.dart';
 import 'package:centaur_flutter/widgets/field.dart';
@@ -46,7 +46,7 @@ class ForgotPassPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignInPage()),
+                        MaterialPageRoute(builder: (context) => SignInClient()),
                       );
                     },
                     child: Text(

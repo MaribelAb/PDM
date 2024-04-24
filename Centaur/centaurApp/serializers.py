@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from centaurApp.models import Agente, Ticket, Usuario
+from centaurApp.models import Agente, Form, Ticket, Usuario
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueTogetherValidator
 from dj_rest_auth.serializers import LoginSerializer
@@ -51,7 +51,8 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = '__all__'
-        extra_kwargs = {
-            'fecha': {'read_only': True, 'required': False},
-            # 'fecha': {'read_only': True},
-        } 
+
+class FormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Form
+        fields = '__all__'

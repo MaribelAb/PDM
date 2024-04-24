@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:centaur_flutter/constants.dart';
+import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
@@ -74,7 +75,7 @@ Future<dynamic> registerUser(String username,String email,String password,String
     "password2": confirmPasswd,
   };
 
-  var url = Uri.parse("$baseUrl/user/auth/registration/");
+  var url = Uri.parse("localhost:8000/user/auth/registration/");
   var res = await http.post(url,body: data);
   //print(res.body);
   if(res.statusCode == 200 || res.statusCode == 201){
@@ -108,4 +109,59 @@ Future<dynamic> registerUser(String username,String email,String password,String
   }
   
   //print(res.statusCode);
+}
+
+Future<Ticket?> getTicket(String token) async {
+  var url = Uri.parse("http://localhost:8000/admin/centaurApp/ticket/");
+  var res = await http.get(url,headers: {
+      'Authorization': 'Token $token',
+  });
+  //print(res.body);
+  if(res.statusCode == 200){
+    var json = jsonDecode(res.body);
+
+    Ticket ticket = Ticket.fromJson(json);
+    ticket.token = token;
+    return ticket;
+  }
+  else{
+    return null;
+  }
+  
+  //print(res.statusCode);
+}
+
+Future<Ticket?> sendForm(String tit, String desc, String sol) async {
+  
+  Map<String, dynamic> data = {
+    "titulo": tit,
+    "descripcion": desc,
+    "solicitante": sol,
+  };
+  String jsonData = jsonEncode(data);
+  var url = Uri.parse("http://localhost:8000/user/centaurApp/");
+  try {
+    http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json', // Specify the content type as JSON
+      },
+      body: jsonData, // Pass the JSON data as the request body
+    );
+
+    // Check the response status code
+    if (response.statusCode == 200) {
+      // Request was successful, handle the response data here
+      print('POST request successful');
+      print('Response: ${response.body}');
+    } else {
+      // Request failed
+      print('POST request failed with status: ${response.statusCode}');
+      print('Response: ${response.body}');
+    }
+  } catch (error) {
+    // Handle any errors that occurred during the request
+    print('Error making POST request: $error');
+  }
+  
 }

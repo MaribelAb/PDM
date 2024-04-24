@@ -1,9 +1,9 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
-import 'package:centaur_flutter/pages/home/home.dart';
+import 'package:centaur_flutter/pages/home/home_cliente.dart';
 import 'package:flutter/material.dart';
-import 'package:centaur_flutter/pages/registration_page.dart';
+import 'package:centaur_flutter/pages/registration_cliente.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:centaur_flutter/widgets/text_button.dart';
 import 'package:centaur_flutter/widgets/field.dart';
@@ -11,14 +11,14 @@ import 'package:centaur_flutter/pages/forgot_pass.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class SignInClient extends StatefulWidget {
+  const SignInClient({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignInClient> createState() => _SignInClientState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInClientState extends State<SignInClient> {
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
@@ -55,12 +55,13 @@ void initState() {
           CustomField(
             controller: usernameController,
             iconUrl: 'assets/icon_email.png',
-            hint: 'Username',
+            hint: 'Nombre de usuario',
           ),
           CustomField(
             controller: passwordController,
             iconUrl: 'assets/icon_password.png',
-            hint: 'Password',
+            hint: 'Contraseña',
+            obsecure: true,
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -73,7 +74,7 @@ void initState() {
                   );
                 },
                 child: Text(
-                  "Forgot Password?",
+                  "¿Has olvidado la contraseña?",
                   style: whiteTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
@@ -106,13 +107,13 @@ void initState() {
                 context.read<UserCubit>().emit(user);
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context){
-                    return Home();
+                    return ClientHome();
                   }
                 ));  // 
               }
               //
             },
-            title: 'Login',
+            title: 'Inicia Sesión',
             margin: EdgeInsets.only(top: 50),
           ),
           Container(
@@ -127,11 +128,11 @@ void initState() {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()),
+                      MaterialPageRoute(builder: (context) => SignUpClient()),
                     );
                   },
                   child: Text(
-                    "Don't have an account? Register",
+                    "¿No tienes cuenta? Regístrate",
                     style: whiteTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,

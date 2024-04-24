@@ -38,6 +38,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['http://*', 'http://localhost:61436'] 
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
@@ -58,16 +60,17 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'centaurApp.apps.CentaurappConfig', 
     'rest_framework.authtoken',
+    'dynamic_forms',
     'corsheaders',
 ]
 
 REST_FRAMEWORK = {
-   'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': (
        'rest_framework.authentication.TokenAuthentication',
+       "rest_framework.authentication.BasicAuthentication",
+       "rest_framework.authentication.SessionAuthentication",
    ),
-   'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAdminUser'
-   ),
+    'DEFAULT_PERMISSION_CLASSES': ( 'rest_framework.permissions.IsAdminUser', ),
 }
 
 SITE_ID = 1

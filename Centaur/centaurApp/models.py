@@ -58,6 +58,16 @@ class Usuario(AbstractBaseUser):
     objects = UserAccountManager()
 
 
+class Form(models.Model):
+    titulo = models.CharField('Titulo', max_length = 100)
+    descripcion = models.CharField('Descripcion', max_length = 100)
+    #solicitante = models.ForeignKey(
+    #    "Usuario",
+    #    on_delete=models.CASCADE,
+    #)
+    solicitante = models.CharField('Solicitante', max_length = 100)
+    def __str__(self):
+        return '{0}'.format(self.titulo)
 
 class Ticket(models.Model):
     ALTA = 'alta'
@@ -74,16 +84,17 @@ class Ticket(models.Model):
     ]
     titulo = models.CharField('Titulo', max_length = 100)
     descripcion = models.CharField('Descripcion', max_length = 100)
-    prioridad = models.CharField(max_length=6, choices=PRIORIDADES)
-    estado = models.CharField(max_length=10, choices=ESTADO)
+    solicitante = models.CharField('Solicitante', max_length = 100, blank=True)
+    prioridad = models.CharField(max_length=6, choices=PRIORIDADES, blank=True)
+    estado = models.CharField(max_length=10, choices=ESTADO, blank=True)
    # encargado = models.ForeignKey(
    #     "Agente",
    #     on_delete=models.CASCADE,
    # )
-    solicitante = models.ForeignKey(
-        "Usuario",
-        on_delete=models.CASCADE,
-    )
+    #solicitante = models.ForeignKey(
+    #    "Usuario",
+    #    on_delete=models.CASCADE,
+    #)
     fecha_ini = models.DateField(blank=True, null=True)
     fecha_fin = models.DateField(blank=True, null=True)
     conversacion = models.ForeignKey(

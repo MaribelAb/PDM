@@ -1,18 +1,24 @@
+import json
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from centaurApp.models import Agente, Usuario, Ticket
+from centaurApp.models import Agente, Form, Usuario, Ticket
 from centaurApp.serializers import TicketSerializer, UserSerializer , AgentSerializer
 from rest_framework import status,views, response
 from rest_framework import authentication
 from django.contrib.auth.models import User
 from django.contrib.auth import logout ,authenticate, login 
 from rest_framework.authtoken.models import Token
-from .serializers import UserSerializer
+from .serializers import FormSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.models import User
+from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -46,15 +52,59 @@ class UserRecordView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+class FormViewSet(viewsets.ModelViewSet):
+    queryset = Form.objects.all()
+    serializer_class = FormSerializer
 
 
+#class TicketViewSet(viewsets.ModelViewSet):
+#    queryset = Ticket.objects.all()
+#    serializer_class = TicketSerializer
 
+@api_view(['GET'])
+def getTicket(request):
+    app = Ticket.objects.all()
+    serializer = TicketSerializer(app, many=True)
+    return Response(serializer.data)
 
-class TicketViewSet(viewsets.ModelViewSet):
-  queryset = Ticket.objects.all()
-  permission_classes = [permissions.AllowAny]
-  authentication_classes = [authentication.TokenAuthentication,]
-  serializer_class = TicketSerializer
+@api_view(['POST'])
+def postTicket(request):
+    serializer = TicketSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@csrf_exempt
+def prueba(request):
+    msg = 'nok'
+    if request.method == 'POST':
+    # Assuming your Flutter app sends JSON data
+        try:
+            # Load the JSON data from the request body
+            data = json.loads(request.body.decode('utf-8'))
+            
+            # Now you can access the data as a Python dictionary
+            # For example, if your Flutter app sends a key 'name', you can access it like this:
+            titulo = data.get('titulo')
+            descripcion = data.get('descripcion')
+            solicitante = data.get ('solicitante')
+
+            nuevo = Ticket.objects.create(titulo = titulo, descripcion = descripcion, solicitante = solicitante)
+            #nuevo.save
+            # Process the data as needed
+            # For example, you could save it to a database
+            
+            return JsonResponse(nuevo, {'message': 'Data received successfully'}, safe=False)
+        
+        except json.JSONDecodeError as e:
+            # Handle JSON decode error
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        
+    else:
+            # Return an error for other HTTP methods
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
+
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()

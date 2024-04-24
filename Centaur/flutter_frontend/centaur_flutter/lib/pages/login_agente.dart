@@ -1,29 +1,43 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
-import 'package:centaur_flutter/pages/home/home.dart';
+import 'package:centaur_flutter/pages/form.dart';
+import 'package:centaur_flutter/pages/home/home_agente.dart';
+import 'package:centaur_flutter/pages/home/home_cliente.dart';
+import 'package:centaur_flutter/pages/registrations_agente.dart';
 import 'package:flutter/material.dart';
-import 'package:centaur_flutter/pages/login_page.dart';
+import 'package:centaur_flutter/pages/registration_cliente.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:centaur_flutter/widgets/text_button.dart';
 import 'package:centaur_flutter/widgets/field.dart';
+import 'package:centaur_flutter/pages/forgot_pass.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:centaur_flutter/models/user_model.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+class SignInAgent extends StatefulWidget {
+  const SignInAgent({Key? key}) : super(key: key);
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignInAgent> createState() => _SignInAgentState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController confirmPasswdController = TextEditingController();
- 
- 
+class _SignInAgentState extends State<SignInAgent> {
+TextEditingController usernameController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+
+
   @override
+void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
@@ -32,53 +46,48 @@ class _SignUpPageState extends State<SignUpPage> {
           horizontal: defaultMargin,
         ),
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 100),
-            child: Text(
-              "Bienvenido a Centaur!",
-              style: whiteTextStyle.copyWith(
-                fontSize: 20,
-                fontWeight: semiBold,
+          //Container(
+          //  margin: EdgeInsets.only(top: 50),
+          //  child: Image.asset(
+          //    'assets/img_login.png',
+          //  ),
+         // ),
+          SizedBox(
+            height: 155,
+          ),
+          CustomField(
+            controller: usernameController,
+            iconUrl: 'assets/icon_email.png',
+            hint: 'Nombre de usuario',
+          ),
+          CustomField(
+            controller: passwordController,
+            iconUrl: 'assets/icon_password.png',
+            hint: 'Contraseña',
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ForgotPassPage()),
+                  );
+                },
+                child: Text(
+                  "¿Has olvidado la contraseña?",
+                  style: whiteTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: semiBold,
+                  ),
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          CustomField(
-            iconUrl: 'assets/icon_name.png',
-            hint: 'Username',
-            controller: usernameController,
-          ),
-          CustomField(
-            iconUrl: 'assets/icon_email.png',
-            hint: 'Email',
-            controller: emailController,
-          ),
-          CustomField(
-            iconUrl: 'assets/icon_password.png',
-            hint: 'Password',
-            controller: passwordController,
-            obsecure: true,
-          ),
-          CustomField(
-            iconUrl: 'assets/icon_password.png',
-            hint: 'Confirm Password',
-            controller: confirmPasswdController,
-            obsecure: true,
-          ),
           CustomTextButton(
-            title: 'Register',
-            margin: EdgeInsets.only(top: 50),
             onTap: () async {
-              var authRes = await registerUser(
-                usernameController.text,
-                emailController.text,
-                passwordController.text,
-                confirmPasswdController.text
-              );
-
+              var authRes = await userAuth(usernameController.text, passwordController.text);
               if(authRes.runtimeType == String){
                 // ignore: use_build_context_synchronously
                 showDialog(
@@ -100,15 +109,18 @@ class _SignUpPageState extends State<SignUpPage> {
                 context.read<UserCubit>().emit(user);
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context){
-                    return Home();
+                    return AgentHome();
                   }
                 ));  // 
               }
+              //
             },
+            title: 'Inicia Sesión',
+            margin: EdgeInsets.only(top: 50),
           ),
           Container(
             margin: EdgeInsets.only(
-              top: 40,
+              top: 30,
               bottom: 74,
             ),
             child: Row(
@@ -118,11 +130,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignInPage()),
+                      MaterialPageRoute(builder: (context) => const SignUpAgent()),
                     );
                   },
                   child: Text(
-                    "Have an account? Log in",
+                    "¿No tienes cuenta? Regístrate",
                     style: whiteTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,

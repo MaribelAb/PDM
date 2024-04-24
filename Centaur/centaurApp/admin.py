@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from centaurApp.models import Agente, Tarea, Ticket, Usuario
+from centaurApp.models import Agente, Tarea, Ticket, Usuario, Form
 
 # Register your models here.
 class UsuarioAdmin(admin.ModelAdmin):
@@ -20,4 +20,5 @@ admin.site.register(Usuario, UsuarioAdmin)
 admin.site.register(Agente)
 admin.site.register(Tarea)
 admin.site.register(Ticket)
+admin.site.register(Form)
 
