@@ -23,7 +23,7 @@ class CustomField extends StatelessWidget {
       padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
         border: Border.all(
-          color: kWhiteColor,
+          color: kBlackColor,
         ),
         borderRadius: BorderRadius.circular(6),
       ),
@@ -48,12 +48,12 @@ class CustomField extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration.collapsed(
                 hintText: hint,
-                hintStyle: whiteTextStyle.copyWith(
+                hintStyle: greyTextStyle.copyWith(
                   fontSize: 18,
-                  fontWeight: semiBold,
+                  //fontWeight: semiBold,
                 ),
               ),
-              style: whiteTextStyle.copyWith(
+              style: blackTextStyle.copyWith(
                 fontSize: 18,
                 fontWeight: semiBold,
               ),

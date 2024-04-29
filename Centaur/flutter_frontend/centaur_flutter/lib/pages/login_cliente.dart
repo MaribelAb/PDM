@@ -1,7 +1,10 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
+import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/pages/home/home_agente.dart';
 import 'package:centaur_flutter/pages/home/home_cliente.dart';
+import 'package:centaur_flutter/pages/tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:centaur_flutter/pages/registration_cliente.dart';
 import 'package:centaur_flutter/theme.dart';
@@ -43,14 +46,16 @@ void initState() {
           horizontal: defaultMargin,
         ),
         children: [
-          //Container(
-          //  margin: EdgeInsets.only(top: 50),
-          //  child: Image.asset(
-          //    'assets/img_login.png',
-          //  ),
-         // ),
+        Container(
+           //margin: EdgeInsets.only(top: 50),
+           child: Image.asset(
+             'images/logo_claro.png',
+           ),
+           height: 200
+           
+          ),
           SizedBox(
-            height: 155,
+            height: 100,
           ),
           CustomField(
             controller: usernameController,
@@ -75,7 +80,7 @@ void initState() {
                 },
                 child: Text(
                   "¿Has olvidado la contraseña?",
-                  style: whiteTextStyle.copyWith(
+                  style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
                   ),
@@ -107,7 +112,9 @@ void initState() {
                 context.read<UserCubit>().emit(user);
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context){
-                    return ClientHome();
+                    //return ClientHome();
+                    //return AgentHome();
+                    return ListaTicketsPage(token: tokenBox);
                   }
                 ));  // 
               }
@@ -133,7 +140,7 @@ void initState() {
                   },
                   child: Text(
                     "¿No tienes cuenta? Regístrate",
-                    style: whiteTextStyle.copyWith(
+                    style: blackTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,
                     ),

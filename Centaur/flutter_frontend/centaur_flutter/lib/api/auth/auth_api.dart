@@ -111,25 +111,26 @@ Future<dynamic> registerUser(String username,String email,String password,String
   //print(res.statusCode);
 }
 
-Future<Ticket?> getTicket(String token) async {
-  var url = Uri.parse("http://localhost:8000/admin/centaurApp/ticket/");
-  var res = await http.get(url,headers: {
-      'Authorization': 'Token $token',
+Future<List<Ticket>> getTickets(String token) async {
+  List<Ticket> tickets = [];
+  var url = Uri.parse("http://localhost:8000/user/getTicket");
+  var res = await http.get(url, headers: {
+    'Authorization': 'Token $token',
   });
-  //print(res.body);
-  if(res.statusCode == 200){
-    var json = jsonDecode(res.body);
-
-    Ticket ticket = Ticket.fromJson(json);
-    ticket.token = token;
-    return ticket;
-  }
-  else{
-    return null;
-  }
   
-  //print(res.statusCode);
+  if (res.statusCode == 200) {
+    final Map<String, dynamic> jsonData = jsonDecode(res.body);
+    // Accede a la clave "data" para obtener la lista de tickets
+    final List<dynamic> ticketData = jsonData['data'];
+    // Mapea los datos de los tickets a objetos Ticket
+    tickets = ticketData.map((item) => Ticket.fromJson(item)).toList(); 
+    return tickets;
+  } else {
+    throw Exception('Failed to load tickets');
+  }
 }
+
+
 
 Future<Ticket?> sendForm(String tit, String desc, String sol) async {
   
@@ -164,4 +165,42 @@ Future<Ticket?> sendForm(String tit, String desc, String sol) async {
     print('Error making POST request: $error');
   }
   
+}
+
+Future<bool> modifyTicket(int ident, String tit, String desc, String token) async {
+  Map<String, dynamic> data = {
+    "id": ident,
+    "titulo": tit,
+    "descripcion": desc,
+  };
+  String jsonData = jsonEncode(data);
+
+  var url = Uri.parse('http://localhost:8000/user/updateTicket/');
+  
+  try {
+    http.Response response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token $token', // Incluye el token de autenticación en el encabezado
+      },
+      body: jsonData,
+    );
+    
+    if (response.statusCode == 200) {
+      // La solicitud fue exitosa
+      print('PUT request successful');
+      print('Response: ${response.body}');
+      return true;
+    } else {
+      // La solicitud falló
+      print('PUT request failed with status: ${response.statusCode}');
+      print('Response: ${response.body}');
+      return false;
+    }
+  } catch (error) {
+    // Manejar cualquier error que ocurra durante la solicitud
+    print('Error making PUT request: $error');
+    return false;
+  }
 }

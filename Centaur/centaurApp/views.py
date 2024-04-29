@@ -19,6 +19,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
@@ -61,11 +63,40 @@ class FormViewSet(viewsets.ModelViewSet):
 #    queryset = Ticket.objects.all()
 #    serializer_class = TicketSerializer
 
-@api_view(['GET'])
+@csrf_exempt
 def getTicket(request):
-    app = Ticket.objects.all()
-    serializer = TicketSerializer(app, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        try:
+            app = Ticket.objects.all()
+            serializer = TicketSerializer(app, many=True)
+            return JsonResponse({'data': serializer.data, 'message': 'Data sent successfully'})
+        except json.JSONDecodeError as e:
+            # Handle JSON decode error
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    else:
+        # Return an error for other HTTP methods
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+@csrf_exempt
+def updateTicket(request):
+    if request.method == 'PUT':
+        
+        data = json.loads(request.body.decode('utf-8'))
+        ticket_id = data.get('id')
+        
+        try:
+            ticket = Ticket.objects.get(id=ticket_id)
+        except Ticket.DoesNotExist:
+            return JsonResponse({'error': 'Ticket does not exist'}, status=404)
+        
+        serializer = TicketSerializer(ticket, data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'message': 'Ticket updated successfully'}, status=200)
+        return JsonResponse(serializer.errors, status=400)
+    else:
+        return JsonResponse({'error': 'Only PUT requests are allowed'}, status=405)
 
 @api_view(['POST'])
 def postTicket(request):

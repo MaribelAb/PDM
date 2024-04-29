@@ -46,14 +46,16 @@ void initState() {
           horizontal: defaultMargin,
         ),
         children: [
-          //Container(
-          //  margin: EdgeInsets.only(top: 50),
-          //  child: Image.asset(
-          //    'assets/img_login.png',
-          //  ),
-         // ),
+          Container(
+          //  //margin: EdgeInsets.only(top: 50),
+           child: Image.asset(
+             'images/logo_claro.png',
+           ),
+           height: 200
+           
+          ),
           SizedBox(
-            height: 155,
+            height: 100,
           ),
           CustomField(
             controller: usernameController,
@@ -77,7 +79,7 @@ void initState() {
                 },
                 child: Text(
                   "¿Has olvidado la contraseña?",
-                  style: whiteTextStyle.copyWith(
+                  style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
                   ),
@@ -118,32 +120,7 @@ void initState() {
             title: 'Inicia Sesión',
             margin: EdgeInsets.only(top: 50),
           ),
-          Container(
-            margin: EdgeInsets.only(
-              top: 30,
-              bottom: 74,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SignUpAgent()),
-                    );
-                  },
-                  child: Text(
-                    "¿No tienes cuenta? Regístrate",
-                    style: whiteTextStyle.copyWith(
-                      fontSize: 16,
-                      fontWeight: semiBold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          
         ],
       ),
     );

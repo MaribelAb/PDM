@@ -5,7 +5,7 @@ class Ticket{
   String ? token;
   String ? titulo;
   String ? descripcion;
-  User ? solicitante;
+  String ? solicitante;
 
 
   Ticket({

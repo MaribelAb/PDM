@@ -1,9 +1,15 @@
+// ignore_for_file: prefer_const_constructors, unnecessary_this
+
+import 'package:centaur_flutter/constants.dart';
+import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:centaur_flutter/navigation_service.dart';
 import 'package:centaur_flutter/pages/form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:centaur_flutter/api/auth/auth_api.dart';
+import 'package:centaur_flutter/pages/tickets.dart';
 
 class AgentHome extends StatefulWidget {
   const AgentHome({super.key});
@@ -17,6 +23,8 @@ class _AgentHomeState extends State<AgentHome> {
   @override
   Widget build(BuildContext context) {
     User user = context.read<UserCubit>().state;
+  
+
     return MaterialApp(
       title: '¡Bienvenido ${user.username}!',
       
@@ -33,6 +41,8 @@ class _AgentHomeState extends State<AgentHome> {
 
 
 
+
+
 class AgentHomePage extends StatefulWidget {
   @override
   _AgentHomePageState createState() => _AgentHomePageState();
@@ -41,16 +51,38 @@ class AgentHomePage extends StatefulWidget {
 class _AgentHomePageState extends State<AgentHomePage> {
   int selectedIndex = 0;
   var items = 4;
+  late List<Ticket> tickets;
+  late List<Widget> widgetOptions;
 
-  //BuildContext? contexto = NavigationService.navigatorKey.currentContext;
-  List<Widget> widgetOptions = <Widget>[
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa tickets aquí dentro de initState()
+    tickets = ListaTicketsPage(token: tokenBox).getListaTickets();
+
+    widgetOptions = <Widget>[
     Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-         SearchBar(
+        SearchBar(
 
         ),
-        
+        ListView.builder(
+                  itemCount: this.tickets.length,
+                  itemBuilder: (context, index) {
+                    Ticket ticket = this.tickets[index];
+                    return ListTile(
+                      leading: ElevatedButton(
+                        onPressed: () {  },
+                        child: Text('Modificar'),),
+                      title: Text(ticket.titulo.toString()), // Suponiendo que "titulo" es un campo en tu clase Ticket
+                      subtitle: Text(ticket.descripcion.toString()),
+                      trailing: Text(ticket.solicitante.toString()), // Suponiendo que "descripcion" es un campo en tu clase Ticket
+                      // Puedes mostrar más detalles del ticket aquí según tu modelo Ticket
+                    );
+                  },
+                ),
+              
       ]
     ),
     Container(
@@ -64,6 +96,10 @@ class _AgentHomePageState extends State<AgentHomePage> {
       constraints: BoxConstraints.expand(),
     )
   ];
+  }
+  
+  //BuildContext? contexto = NavigationService.navigatorKey.currentContext;
+  
 
   void _onItemTapped(int index) {
     setState(() {
@@ -71,7 +107,9 @@ class _AgentHomePageState extends State<AgentHomePage> {
     });
   }
 
-  
+  List<Widget> getwidgetList(){
+    return this.widgetOptions;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +117,7 @@ class _AgentHomePageState extends State<AgentHomePage> {
       return this.context;
     }
     User user = context.read<UserCubit>().state;
+    List<Widget> widegtlist = getwidgetList();
     return Scaffold(
       appBar: AppBar(
           title: Row(
@@ -114,6 +153,7 @@ class _AgentHomePageState extends State<AgentHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.airplane_ticket), 
             label: 'Mis Tickets'
+            
           ),
         
           BottomNavigationBarItem(
@@ -162,7 +202,7 @@ class _AgentHomePageState extends State<AgentHomePage> {
             )
           ),
           Expanded(
-            child: widgetOptions.elementAt(selectedIndex),
+            child: widegtlist.elementAt(selectedIndex),
           ),
         ],
       ),

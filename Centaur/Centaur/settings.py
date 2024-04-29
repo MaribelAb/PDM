@@ -38,10 +38,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://*', 'http://localhost:61436'] 
+#CSRF_TRUSTED_ORIGINS = ['http://*', 'http://localhost:61102/'] 
 
-CORS_ORIGIN_ALLOW_ALL = True
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:61102",
+]
 # Application definition
 
 INSTALLED_APPS = [

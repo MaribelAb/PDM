@@ -10,17 +10,21 @@ Color kGreyColor = Color(0xff98999F);
 Color kBlueColor = Color(0xff5284E3);
 Color kBackgroundButtonColor = Color(0xffFCFCFD);
 Color kStrokeButtonColor = Color(0xffE5E5E5);
-Color bgColor = Color(0xff2eabff);
+Color bgColor = Colors.white;
 
 // TEXT STYLES
-TextStyle blackTextStyle = GoogleFonts.mulish(
+TextStyle blackTextStyle = GoogleFonts.juliusSansOne(
   color: kBlackColor,
 );
-TextStyle whiteTextStyle = GoogleFonts.mulish(
+TextStyle whiteTextStyle = GoogleFonts.juliusSansOne(
   color: kWhiteColor,
 );
-TextStyle blueTextStyle = GoogleFonts.mulish(
+TextStyle blueTextStyle = GoogleFonts.juliusSansOne(
   color: kBlueColor,
+);
+
+TextStyle greyTextStyle = GoogleFonts.juliusSansOne(
+  color: kGreyColor,
 );
 
 // FONT WEIGHTS
