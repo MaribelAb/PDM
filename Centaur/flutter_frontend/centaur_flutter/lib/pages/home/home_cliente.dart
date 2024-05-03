@@ -1,7 +1,9 @@
+import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:centaur_flutter/navigation_service.dart';
 import 'package:centaur_flutter/pages/form.dart';
+import 'package:centaur_flutter/pages/tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -53,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 BuildContext? context = NavigationService.navigatorKey.currentContext;
                 Navigator.of(context!).push(MaterialPageRoute(
                   builder: (context){
-                    return MyForm();
+                    return ListaTicketsPage(token: tokenBox,);
                   }
                 )); 
               }
@@ -163,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           )
 
-    ),
+      ),
       bottomNavigationBar: MediaQuery.of(context).size.width <= 640
       ? BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

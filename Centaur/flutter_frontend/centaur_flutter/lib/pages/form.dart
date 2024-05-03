@@ -1,6 +1,10 @@
+
+
 import 'package:centaur_flutter/api/auth/auth_api.dart';
+import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/ticket_cubit.dart';
 import 'package:centaur_flutter/models/ticket_model.dart';
+import 'package:centaur_flutter/pages/tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -94,31 +98,52 @@ class MyCustomFormState extends State<MyCustomForm> {
             child: ElevatedButton(
               onPressed: () async {
                 var authRes = await sendForm(titleController.text, descriptionController.text, userController.text);
-                if(authRes.runtimeType == String){
+                if(authRes == false){
                   // ignore: use_build_context_synchronously
                   showDialog(
-                    context: context, 
-                    builder: (context){
-                      return Dialog(
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 200,
-                          width: 250,
-                          decoration: const BoxDecoration(),
-                          child: Text(authRes as String)),
-                      );
-                    }
-                  );
+                      context: context, 
+                      builder: (context){
+                        return AlertDialog(
+                          title: Text('Error'),
+                          content: Text('Ticket no se ha creado'),
+                          actions: [
+                            TextButton(
+                           
+                               onPressed: () {
+                                Navigator.pop(context);
+                              
+                              }, 
+                              child: Text('Aceptar')
+                            ),
+                          ],
+                        );
+                      }
+                    );
                 }
-                else if(authRes.runtimeType == Ticket){
+                else{
                 Ticket ticket = authRes as Ticket;
                 context.read<TicketCubit>().emit(ticket);
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context){
-                    return MyForm();
-                  }
-                ));  // 
-              }
+                showDialog(
+                      context: context, 
+                      builder: (context){
+                        return AlertDialog(
+                          title: Text('Operación Exitosa'),
+                          content: Text('Ticket creado correctamente'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ListaTicketsPage(token: tokenBox)),
+                                );
+                              }, 
+                              child: Text('Aceptar')
+                            ),
+                          ],
+                        );
+                      }
+                    );  // 
+                }
               },
               child: const Text('Submit'),
             ),

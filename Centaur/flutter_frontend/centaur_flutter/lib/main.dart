@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:centaur_flutter/pages/login_cliente.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:centaur_flutter/pages/create_form.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -36,8 +37,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.amber,
         ),
         //home: const IndexPage(),
-        home: const SignInClient(),
-      
+        home: SignInClient()
       ),
     );
   }

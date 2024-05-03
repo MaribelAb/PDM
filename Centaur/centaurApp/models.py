@@ -58,16 +58,7 @@ class Usuario(AbstractBaseUser):
     objects = UserAccountManager()
 
 
-class Form(models.Model):
-    titulo = models.CharField('Titulo', max_length = 100)
-    descripcion = models.CharField('Descripcion', max_length = 100)
-    #solicitante = models.ForeignKey(
-    #    "Usuario",
-    #    on_delete=models.CASCADE,
-    #)
-    solicitante = models.CharField('Solicitante', max_length = 100)
-    def __str__(self):
-        return '{0}'.format(self.titulo)
+
 
 class Ticket(models.Model):
     ALTA = 'alta'
@@ -111,6 +102,25 @@ class Ticket(models.Model):
 
 
 
+class Campo(models.Model):
+    nombre = models.CharField(max_length=100)
+
+class TextField(Campo):
+    texto = models.CharField(max_length=200)
+
+class Opcion(models.Model):
+    nombre = models.CharField(max_length=100, blank=True)
+    valor = models.CharField(max_length=100, null=True)
+
+class DropdownField(Campo):
+    opciones = models.ManyToManyField(Opcion, blank=True)
+
+class Formulario(models.Model):
+    titulo = models.CharField(max_length=100)
+    descripcion = models.TextField(max_length=200)
+    campos = models.ManyToManyField(Campo, blank=True)
+    def __str__(self):
+        return '{0}'.format(self.titulo)
 
 
 class Chat(models.Model):

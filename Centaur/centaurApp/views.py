@@ -2,14 +2,14 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from centaurApp.models import Agente, Form, Usuario, Ticket
+from centaurApp.models import Agente, Usuario, Ticket
 from centaurApp.serializers import TicketSerializer, UserSerializer , AgentSerializer
 from rest_framework import status,views, response
 from rest_framework import authentication
 from django.contrib.auth.models import User
 from django.contrib.auth import logout ,authenticate, login 
 from rest_framework.authtoken.models import Token
-from .serializers import FormSerializer, UserSerializer
+from .serializers import  FormularioSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,6 +20,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -54,9 +56,7 @@ class UserRecordView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-class FormViewSet(viewsets.ModelViewSet):
-    queryset = Form.objects.all()
-    serializer_class = FormSerializer
+
 
 
 #class TicketViewSet(viewsets.ModelViewSet):
@@ -179,3 +179,27 @@ class LogoutView(views.APIView):
         logout(request)
         # Devolvemos la respuesta al cliente
         return response.Response({'message':'Sessión Cerrada y Token Eliminado !!!!'},status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+def create_form(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        serializer = FormularioSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return JsonResponse({'message': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        
+
+class getForms(views.APIView):
+    def get(self, request):
+        serializer = FormularioSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -12,4 +12,5 @@ urlpatterns = [
     path('centaurApp/', views.prueba),
     path('getTicket', views.getTicket),
     path('updateTicket/', views.updateTicket),
+    path('createForm/', views.create_form),
 ]

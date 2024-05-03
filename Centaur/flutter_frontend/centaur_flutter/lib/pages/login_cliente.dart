@@ -2,6 +2,8 @@ import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/pages/create_form.dart';
+import 'package:centaur_flutter/pages/home/home_admin.dart';
 import 'package:centaur_flutter/pages/home/home_agente.dart';
 import 'package:centaur_flutter/pages/home/home_cliente.dart';
 import 'package:centaur_flutter/pages/tickets.dart';
@@ -75,7 +77,7 @@ void initState() {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ForgotPassPage()),
+                    MaterialPageRoute(builder: (context) => CreateForm()),
                   );
                 },
                 child: Text(
@@ -114,7 +116,7 @@ void initState() {
                   builder: (context){
                     //return ClientHome();
                     //return AgentHome();
-                    return ListaTicketsPage(token: tokenBox);
+                    return AdminHome();
                   }
                 ));  // 
               }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import '../../constants.dart';
@@ -132,8 +133,8 @@ Future<List<Ticket>> getTickets(String token) async {
 
 
 
-Future<Ticket?> sendForm(String tit, String desc, String sol) async {
-  
+Future<bool?> sendForm(String tit, String desc, String sol) async {
+  bool sent = false;
   Map<String, dynamic> data = {
     "titulo": tit,
     "descripcion": desc,
@@ -151,10 +152,11 @@ Future<Ticket?> sendForm(String tit, String desc, String sol) async {
     );
 
     // Check the response status code
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 500) {
       // Request was successful, handle the response data here
       print('POST request successful');
       print('Response: ${response.body}');
+      sent = true;
     } else {
       // Request failed
       print('POST request failed with status: ${response.statusCode}');
@@ -164,7 +166,7 @@ Future<Ticket?> sendForm(String tit, String desc, String sol) async {
     // Handle any errors that occurred during the request
     print('Error making POST request: $error');
   }
-  
+  return sent;
 }
 
 Future<bool> modifyTicket(int ident, String tit, String desc, String token) async {
@@ -202,5 +204,73 @@ Future<bool> modifyTicket(int ident, String tit, String desc, String token) asyn
     // Manejar cualquier error que ocurra durante la solicitud
     print('Error making PUT request: $error');
     return false;
+  }
+}
+
+Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Widget> campos) async {
+  bool hecho = false;
+  final Map<String, dynamic> datos = {
+    'titulo': titulo,
+    'descripcion': descripcion,
+    'campos': [],
+  };
+
+  for (Widget campo in campos) {
+    if (campo is TextField) {
+      datos['campos'].add({
+        'tipo': 'Texto',
+        'nombre': (campo as TextField).controller?.text,
+      });
+    } else if (campo is Column && campo.children.length == 2) {
+      final fieldName = (campo.children.first as Text).data;
+      final List<String> opciones = [];
+      for (var i = 1; i < campo.children.length; i++) {
+        final String opcion = (campo.children[i] as DropdownButton<String>).value!;
+        opciones.add(opcion);
+      }
+      datos['campos'].add({
+        'tipo': 'Desplegable',
+        'nombre': fieldName,
+        'opciones': opciones,
+      });
+    }
+  }
+
+  final String apiUrl = 'http://localhost:8000/user/createForm/';
+  final response = await http.post(
+    Uri.parse(apiUrl),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${tokenBox}' // Agrega el token de autenticación aquí
+    },
+    body: json.encode(datos),
+  );
+
+  if (response.statusCode == 201) {
+    print('Formulario creado exitosamente');
+    hecho = true;
+  } else {
+    print('Error al crear el formulario: ${response.body}');
+  }
+  return hecho;
+}
+
+
+Future<List<Ticket>> getForm(String token) async {
+  List<Ticket> tickets = [];
+  var url = Uri.parse("http://localhost:8000/user/getTicket");
+  var res = await http.get(url, headers: {
+    'Authorization': 'Token $token',
+  });
+  
+  if (res.statusCode == 200) {
+    final Map<String, dynamic> jsonData = jsonDecode(res.body);
+    // Accede a la clave "data" para obtener la lista de tickets
+    final List<dynamic> ticketData = jsonData['data'];
+    // Mapea los datos de los tickets a objetos Ticket
+    tickets = ticketData.map((item) => Ticket.fromJson(item)).toList(); 
+    return tickets;
+  } else {
+    throw Exception('Failed to load tickets');
   }
 }
