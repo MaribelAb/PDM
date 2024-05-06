@@ -1,4 +1,5 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
+import 'package:centaur_flutter/models/formulario_model.dart';
 import 'package:centaur_flutter/pages/formList.dart';
 import 'package:flutter/material.dart';
 
@@ -6,16 +7,15 @@ void main() {
   runApp(CreateForm());
 }
 
-const List<String> list = ['Texto', 'Desplegable'];
-List<Widget> formFields = [];
-TextEditingController textfieldcontroller = TextEditingController();
-TextEditingController optionscontroller = TextEditingController();
+List<Campo> formFields = [];
 TextEditingController titulocontroller = TextEditingController();
 TextEditingController descriptioncontroller = TextEditingController();
-List<TextEditingController> opt = [];
-List<String> opciones = [];
+TextEditingController textfieldcontroller = TextEditingController();
+TextEditingController optionscontroller = TextEditingController();
+const List<String> list = ['Texto', 'Desplegable'];
 
 class CreateForm extends StatelessWidget {
+   String dropdownValue = list.first;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,8 +33,8 @@ class TextFieldManager extends StatefulWidget {
 }
 
 class _TextFieldManagerState extends State<TextFieldManager> {
-  String dropdownValue = list.first;
 
+String dropdownValue = list.first;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,8 +47,8 @@ class _TextFieldManagerState extends State<TextFieldManager> {
           controller: descriptioncontroller,
           decoration: InputDecoration(hintText: 'Descripción'),
         ),
-        if (formFields.isNotEmpty) ...formFields,
-        
+        if (formFields.isNotEmpty)
+          ...formFields.map((campo) => buildCampoWidget(campo)).toList(),
         Row(
           children: [
             Text('Añade campo'),
@@ -56,11 +56,10 @@ class _TextFieldManagerState extends State<TextFieldManager> {
             Flexible(
               child: TextField(
                 controller: textfieldcontroller,
-                decoration:
-                    InputDecoration(helperText: 'Nombre del campo'),
+                decoration: InputDecoration(helperText: 'Nombre del campo'),
               ),
             ),
-            DropdownButton<String>(
+            DropdownButton(
               value: dropdownValue,
               icon: const Icon(Icons.arrow_downward),
               elevation: 16,
@@ -68,7 +67,7 @@ class _TextFieldManagerState extends State<TextFieldManager> {
               underline: Container(
                 height: 2,
                 color: Colors.deepPurpleAccent,
-              ),
+              ),  
               onChanged: (String? value) {
                 setState(() {
                   dropdownValue = value!;
@@ -82,86 +81,86 @@ class _TextFieldManagerState extends State<TextFieldManager> {
               }).toList(),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: (){
                 buildForm(dropdownValue);
-              },
-              child: Text("Añade"),
+              }, 
+              child: Text('Añadir'),
             ),
           ],
         ),
         ElevatedButton(
-              onPressed: () async {
-                var authRes = await enviarDatosAlFormulario(titulocontroller.text, descriptioncontroller.text, formFields);
-                if(authRes == false){
-                  // ignore: use_build_context_synchronously
-                  showDialog(
-                      context: context, 
-                      builder: (context){
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Formulario no se ha guardado'),
-                          actions: [
-                            TextButton(
-                           
-                               onPressed: () {
-                                Navigator.pop(context);
-                              
-                              }, 
-                              child: Text('Aceptar')
-                            ),
-                          ],
-                        );
-                      }
-                    );
-                }
-                else{
-                showDialog(
-                      context: context, 
-                      builder: (context){
-                        return AlertDialog(
-                          title: Text('Operación Exitosa'),
-                          content: Text('Formulario guardado correctamente'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => formList()),
-                                );
-                              }, 
-                              child: Text('Aceptar')
-                            ),
-                          ],
-                        );
-                      }
-                    );  // 
-                }
-              },
-              child: Text("Guardar"),
-            ),
+          onPressed: () async {
+            var authRes = await enviarDatosAlFormulario(
+                titulocontroller.text, descriptioncontroller.text, formFields);
+            if (authRes == false) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Error'),
+                    content: Text('Formulario no se ha guardado'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Aceptar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else{
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Operación Exitosa'),
+                    content: Text('Formulario guardado correctamente'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => FormList()),
+                          );
+                        },
+                        child: Text('Aceptar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          }, 
+          child: Text('Guardar')
+        ),
       ],
     );
   }
-
-  void buildForm(String opcion) {
-    switch (opcion) {
+  
+  void buildForm(String dropdownValue) {
+    switch (dropdownValue){
       case 'Texto':
-        formFields.add(addTextField(textfieldcontroller.text));
+        formFields.add(
+          Campo(
+            nombre: textfieldcontroller.text, 
+            tipo: 'Texto')
+        );
         setState(() {});
-      break;
+        break;  
       case 'Desplegable':
+        List<Opcion> opt = [];
         showDialog(
-          context: context,
-          builder: (BuildContext context) {
+          context: context, 
+          builder: (BuildContext context){
             return AlertDialog(
               title: Text("Nombre del campo y opciones separadas por comas"),
               content: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: textfieldcontroller,
-                    decoration:
-                        InputDecoration(helperText: 'Nombre del campo'),
+                    decoration: InputDecoration(helperText: 'Nombre del campo'),
                   ),
                   TextField(
                     controller: optionscontroller,
@@ -169,53 +168,79 @@ class _TextFieldManagerState extends State<TextFieldManager> {
                   ),
                 ],
               ),
-              actions: <Widget>[
+              actions: [
                 TextButton(
-                  onPressed: () {
-                    formFields.add(addDropDown(
-                      textfieldcontroller.text,
-                      optionscontroller.text.split(','),
-                    ));
+                  onPressed: (){
+                    final fieldName = textfieldcontroller.text;
+                    var options = optionscontroller.text.split(',');
+                    for (var i in options){
+                      opt.add(
+                        Opcion(
+                          nombre: i, 
+                          valor: i
+                        )
+                      );
+                    }
+                    formFields.add(
+                      Campo(
+                        nombre: fieldName, 
+                        tipo: 'Desplegable',
+                        opciones: opt,
+                      )
+                    );
                     setState(() {});
                     Navigator.of(context).pop();
-                  },
+                  }, 
                   child: Text('Aceptar'),
-                ),
+                )
               ],
             );
-          },
+          }
         );
-      break;
+        setState(() { });
+        break;
+      
     }
   }
 }
 
-Widget addTextField(String nom) {
-  return Row(
-    children: [
-      Text(nom),
-      SizedBox(width: 10),
-      Expanded(child: TextField()),
-    ],
-  );
+Widget buildCampoWidget(Campo campo) {
+    if (campo.tipo == 'Texto') {
+      return Row(
+        children: [
+          Text(campo.nombre),
+          Expanded(
+            child: TextField()
+          ),
+        ],
+      );
+    } else if (campo.tipo == 'Desplegable') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(campo.nombre),
+          SizedBox(height: 10),
+          if (campo.opciones!.isNotEmpty) ...[
+            DropdownButton(
+            value: campo.opciones!.isNotEmpty ? campo.opciones!.first.valor : null,
+            onChanged: (String? newValue) {},
+            items: campo.opciones!.map<DropdownMenuItem<String>>((opcion) {
+              return DropdownMenuItem<String>(
+                value: opcion.valor,
+                child: Text(opcion.nombre),
+              );
+            }).toList(),
+          ),
+          ] else ...[
+            Text('No hay opciones disponibles'), 
+          ],
+        ],
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+
 }
 
-Widget addDropDown(String fieldName, List<String> opciones) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(fieldName),
-      SizedBox(height: 10),
-      DropdownButton<String>(
-        value: opciones.first,
-        onChanged: (String? newValue) {},
-        items: opciones.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      ),
-    ],
-  );
-}
+
+

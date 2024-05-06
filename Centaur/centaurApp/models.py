@@ -104,23 +104,27 @@ class Ticket(models.Model):
 
 class Campo(models.Model):
     nombre = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=100, blank=True)
 
 class TextField(Campo):
     texto = models.CharField(max_length=200)
 
-class Opcion(models.Model):
-    nombre = models.CharField(max_length=100, blank=True)
-    valor = models.CharField(max_length=100, null=True)
-
 class DropdownField(Campo):
-    opciones = models.ManyToManyField(Opcion, blank=True)
+    # Elimina el modelo Opcion y la relación ManyToMany
+    # Agrega un campo de opciones directamente al modelo DropdownField
+    options = models.ManyToManyField('Opcion', blank=True, null = True)
 
 class Formulario(models.Model):
     titulo = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=200)
     campos = models.ManyToManyField(Campo, blank=True)
-    def __str__(self):
-        return '{0}'.format(self.titulo)
+
+class Opcion(models.Model):
+    nombre = models.CharField(max_length=100, blank=True)
+    valor = models.CharField(max_length=100, null=True)
+    # Agrega un campo de referencia al campo DropdownField
+    dropdown_field = models.ForeignKey(DropdownField, related_name='opciones', on_delete=models.CASCADE)
+
 
 
 class Chat(models.Model):

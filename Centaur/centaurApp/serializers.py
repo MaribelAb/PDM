@@ -69,18 +69,22 @@ class TextFieldSerializer(serializers.ModelSerializer):
         fields = ['id', 'texto']
 
 class DropdownFieldSerializer(serializers.ModelSerializer):
+    # No necesitas un serializador separado para DropdownField,
+    # Puedes incluir directamente las opciones dentro de este serializador
     opciones = OpcionSerializer(many=True)
 
     class Meta:
         model = DropdownField
-        fields = ['id', 'opciones']
+        fields = ['id', 'nombre', 'tipo', 'opciones']  # Ajusta según tu modelo Campo
 
 class CampoSerializer(serializers.ModelSerializer):
     tipo = serializers.CharField(source='get_tipo_display', read_only=True)
+    # Incluye el serializador de DropdownField para los campos de tipo desplegable
+    dropdown_field = DropdownFieldSerializer()
 
     class Meta:
         model = Campo
-        fields = ['id', 'nombre', 'tipo']
+        fields = ['id', 'nombre', 'tipo', 'dropdown_field']  # Ajusta según tu modelo Campo
 
 class FormularioSerializer(serializers.ModelSerializer):
     campos = CampoSerializer(many=True, read_only=True)
@@ -88,18 +92,3 @@ class FormularioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Formulario
         fields = ['id', 'titulo', 'descripcion', 'campos']
-
-    def create(self, validated_data):
-        campos_data = validated_data.pop('campos', [])
-        formulario = Formulario.objects.create(**validated_data)
-        for campo_data in campos_data:
-            tipo = campo_data.pop('tipo')
-            if tipo == 'Texto':
-                campo = TextField.objects.create(**campo_data)
-            elif tipo == 'Desplegable':
-                opciones_data = campo_data.pop('opciones', [])
-                campo = DropdownField.objects.create(**campo_data)
-                for opcion_data in opciones_data:
-                    Opcion.objects.create(campo=campo, **opcion_data)
-            formulario.campos.add(campo)
-        return formulario

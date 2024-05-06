@@ -13,4 +13,5 @@ urlpatterns = [
     path('getTicket', views.getTicket),
     path('updateTicket/', views.updateTicket),
     path('createForm/', views.create_form),
+    path('getForm/', views.getForms),
 ]

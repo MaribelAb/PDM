@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from centaurApp.models import Agente, Usuario, Ticket
+from centaurApp.models import Agente, Formulario, Usuario, Ticket
 from centaurApp.serializers import TicketSerializer, UserSerializer , AgentSerializer
 from rest_framework import status,views, response
 from rest_framework import authentication
@@ -185,6 +185,7 @@ class LogoutView(views.APIView):
 def create_form(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        print(data)
         serializer = FormularioSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -193,13 +194,16 @@ def create_form(request):
     else:
         return JsonResponse({'message': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
-
-class getForms(views.APIView):
-    def get(self, request):
-        serializer = FormularioSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@csrf_exempt
+def getForms(request):
+    if request.method == 'GET':
+        try:
+            app = Formulario.objects.all()
+            serializer = FormularioSerializer(app, many=True)
+            return JsonResponse({'data': serializer.data, 'message': 'Data sent successfully'})
+        except json.JSONDecodeError as e:
+        # Handle JSON decode error
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    else:
+        # Return an error for other HTTP methods
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)

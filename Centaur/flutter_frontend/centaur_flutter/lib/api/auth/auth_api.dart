@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:centaur_flutter/constants.dart';
+import 'package:centaur_flutter/models/formulario_model.dart';
 import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ Future<User?> getUser(String token) async {
   //print(res.statusCode);
 }
 
-//{"key":"a2123bb2c65d4b46b7f72d66a72db708fccf6ef6"}
+
 
 
 Future<dynamic> registerUser(String username,String email,String password,String confirmPasswd) async {
@@ -121,9 +122,7 @@ Future<List<Ticket>> getTickets(String token) async {
   
   if (res.statusCode == 200) {
     final Map<String, dynamic> jsonData = jsonDecode(res.body);
-    // Accede a la clave "data" para obtener la lista de tickets
     final List<dynamic> ticketData = jsonData['data'];
-    // Mapea los datos de los tickets a objetos Ticket
     tickets = ticketData.map((item) => Ticket.fromJson(item)).toList(); 
     return tickets;
   } else {
@@ -146,9 +145,9 @@ Future<bool?> sendForm(String tit, String desc, String sol) async {
     http.Response response = await http.post(
       url,
       headers: {
-        'Content-Type': 'application/json', // Specify the content type as JSON
+        'Content-Type': 'application/json',
       },
-      body: jsonData, // Pass the JSON data as the request body
+      body: jsonData, 
     );
 
     // Check the response status code
@@ -207,41 +206,44 @@ Future<bool> modifyTicket(int ident, String tit, String desc, String token) asyn
   }
 }
 
-Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Widget> campos) async {
+Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Campo> campos) async {
   bool hecho = false;
-  final Map<String, dynamic> datos = {
+  final Map <String, dynamic> datos={
     'titulo': titulo,
     'descripcion': descripcion,
     'campos': [],
   };
-
-  for (Widget campo in campos) {
-    if (campo is TextField) {
+  print(campos);
+  for (Campo campo in campos) {
+    if (campo.tipo == 'Texto') {
       datos['campos'].add({
         'tipo': 'Texto',
-        'nombre': (campo as TextField).controller?.text,
+        'nombre': campo.nombre,
       });
-    } else if (campo is Column && campo.children.length == 2) {
-      final fieldName = (campo.children.first as Text).data;
+    } else if (campo.tipo == 'Desplegable') {
       final List<String> opciones = [];
-      for (var i = 1; i < campo.children.length; i++) {
-        final String opcion = (campo.children[i] as DropdownButton<String>).value!;
-        opciones.add(opcion);
+
+      if (campo.opciones != null) {
+        for (Opcion opcion in campo.opciones!) {
+          opciones.add(opcion.nombre);
+}
       }
+
       datos['campos'].add({
         'tipo': 'Desplegable',
-        'nombre': fieldName,
+        'nombre': campo.nombre,
         'opciones': opciones,
       });
     }
   }
 
   final String apiUrl = 'http://localhost:8000/user/createForm/';
+
   final response = await http.post(
     Uri.parse(apiUrl),
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${tokenBox}' // Agrega el token de autenticación aquí
+      'Authorization': 'Bearer ${tokenBox}',
     },
     body: json.encode(datos),
   );
@@ -256,21 +258,18 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Wid
 }
 
 
-Future<List<Ticket>> getForm(String token) async {
-  List<Ticket> tickets = [];
-  var url = Uri.parse("http://localhost:8000/user/getTicket");
-  var res = await http.get(url, headers: {
-    'Authorization': 'Token $token',
-  });
-  
-  if (res.statusCode == 200) {
-    final Map<String, dynamic> jsonData = jsonDecode(res.body);
-    // Accede a la clave "data" para obtener la lista de tickets
-    final List<dynamic> ticketData = jsonData['data'];
-    // Mapea los datos de los tickets a objetos Ticket
-    tickets = ticketData.map((item) => Ticket.fromJson(item)).toList(); 
-    return tickets;
+
+Future<List<Formulario>> obtenerFormularios() async {
+  final String apiUrl = 'http://localhost:8000/user/getForm/';
+  final response = await http.get(Uri.parse(apiUrl));
+
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    final List<dynamic> formData = jsonData['data'];
+    final List<Formulario> formularios = formData.map((data) => Formulario.fromJson(data)).toList();
+    return formularios;
   } else {
-    throw Exception('Failed to load tickets');
+    print('Error al obtener los formularios: ${response.body}');
+    return [];
   }
 }

@@ -3,6 +3,7 @@ import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:centaur_flutter/pages/create_form.dart';
+import 'package:centaur_flutter/pages/formList.dart';
 import 'package:centaur_flutter/pages/home/home_admin.dart';
 import 'package:centaur_flutter/pages/home/home_agente.dart';
 import 'package:centaur_flutter/pages/home/home_cliente.dart';
@@ -77,7 +78,7 @@ void initState() {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CreateForm()),
+                    MaterialPageRoute(builder: (context) => ForgotPassPage()),
                   );
                 },
                 child: Text(
@@ -116,7 +117,7 @@ void initState() {
                   builder: (context){
                     //return ClientHome();
                     //return AgentHome();
-                    return AdminHome();
+                    return FormList();
                   }
                 ));  // 
               }
