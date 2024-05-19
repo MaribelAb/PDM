@@ -37,3 +37,10 @@ FontWeight semiBold = FontWeight.w600;
 FontWeight bold = FontWeight.w700;
 FontWeight extraBold = FontWeight.w800;
 FontWeight black = FontWeight.w900;
+
+
+final ThemeData myTheme = ThemeData(
+  primaryColor: Colors.amber,
+  fontFamily: 'Roboto', // Example font family
+  
+);

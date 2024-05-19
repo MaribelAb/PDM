@@ -1,7 +1,8 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
-import 'package:centaur_flutter/pages/home/home_cliente.dart';
+import 'package:centaur_flutter/pages/home/agent_home.dart';
+//import 'package:centaur_flutter/pages/home/home_cliente.dart';
 import 'package:flutter/material.dart';
 import 'package:centaur_flutter/pages/login_cliente.dart';
 import 'package:centaur_flutter/theme.dart';
@@ -98,10 +99,12 @@ class _SignUpAgentState extends State<SignUpAgent> {
               }
               else if(authRes.runtimeType == User){
                 User user = authRes;
+                List<String> groupnames = ['Agent'];
+                user.groups = groupnames;
                 context.read<UserCubit>().emit(user);
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context){
-                    return ClientHome();
+                    return AgentHome();
                   }
                 ));  // 
               }

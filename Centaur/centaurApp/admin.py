@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from centaurApp.models import Agente, Campo, DropdownField, Formulario, Opcion, Tarea, TextField, Ticket, Usuario
+from centaurApp.models import Agente, Campo,  Formulario, Opcion, Tarea, Ticket, Usuario
 
 # Register your models here.
 class UsuarioAdmin(admin.ModelAdmin):
@@ -23,6 +23,4 @@ admin.site.register(Ticket)
 admin.site.register(Formulario)
 admin.site.register(Opcion)
 admin.site.register(Campo)
-admin.site.register(DropdownField)
-admin.site.register(TextField)
 

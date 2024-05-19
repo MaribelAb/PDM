@@ -24,6 +24,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework import serializers, views, status
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from django.contrib.auth.models import User
+
 
 # Create your views here.
 
@@ -57,6 +64,41 @@ class UserRecordView(APIView):
         )
 
 
+class CustomAuthTokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        if username and password:
+            user = authenticate(request=self.context.get('request'),
+                                username=username, password=password)
+
+            if not user:
+                msg = 'Unable to log in with provided credentials.'
+                raise serializers.ValidationError(msg, code='authorization')
+        else:
+            msg = 'Must include "username" and "password".'
+            raise serializers.ValidationError(msg, code='authorization')
+
+        attrs['user'] = user
+        return attrs
+
+class CustomAuthToken(views.APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = CustomAuthTokenSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        user_data = UserSerializer(user).data
+        return Response({
+            'token': token.key,
+            'user': user_data
+        }, status=status.HTTP_200_OK)
 
 
 #class TicketViewSet(viewsets.ModelViewSet):
@@ -181,6 +223,7 @@ class LogoutView(views.APIView):
         return response.Response({'message':'Sessión Cerrada y Token Eliminado !!!!'},status=status.HTTP_200_OK)
 
 
+
 @csrf_exempt
 def create_form(request):
     if request.method == 'POST':
@@ -194,16 +237,15 @@ def create_form(request):
     else:
         return JsonResponse({'message': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
-@csrf_exempt
+@csrf_exempt 
 def getForms(request):
     if request.method == 'GET':
         try:
             app = Formulario.objects.all()
             serializer = FormularioSerializer(app, many=True)
             return JsonResponse({'data': serializer.data, 'message': 'Data sent successfully'})
-        except json.JSONDecodeError as e:
-        # Handle JSON decode error
-            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        except Exception as e:
+            print(f"Error: {e}")  # Log the exception for debugging
+            return JsonResponse({'error': 'An error occurred while fetching forms'}, status=500)
     else:
-        # Return an error for other HTTP methods
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)

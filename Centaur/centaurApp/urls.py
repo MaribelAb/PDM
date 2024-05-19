@@ -14,4 +14,5 @@ urlpatterns = [
     path('updateTicket/', views.updateTicket),
     path('createForm/', views.create_form),
     path('getForm/', views.getForms),
+    path('api-token-auth/', views.CustomAuthToken.as_view(), name='api_token_auth'),
 ]

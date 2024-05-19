@@ -6,6 +6,7 @@ class Ticket{
   String ? titulo;
   String ? descripcion;
   String ? solicitante;
+  DateTime ? fecha_creacion;
 /*
 class Ticket(models.Model):
     ALTA = 'alta'
@@ -54,6 +55,7 @@ class Ticket(models.Model):
     this.titulo,
     this.descripcion,
     this.solicitante,
+    this.fecha_creacion,
     this.id,
   });
 
@@ -62,6 +64,7 @@ class Ticket(models.Model):
       titulo: json["titulo"],
       descripcion: json["descripcion"],
       solicitante:json["solicitante"],
+      fecha_creacion: json["fecha_creacion"],
       id: json["id"],
     );
   }

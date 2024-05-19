@@ -2,12 +2,13 @@ import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
-import 'package:centaur_flutter/pages/create_form.dart';
-import 'package:centaur_flutter/pages/formList.dart';
-import 'package:centaur_flutter/pages/home/home_admin.dart';
-import 'package:centaur_flutter/pages/home/home_agente.dart';
-import 'package:centaur_flutter/pages/home/home_cliente.dart';
-import 'package:centaur_flutter/pages/tickets.dart';
+//import 'package:centaur_flutter/pages/create_form.dart';
+//import 'package:centaur_flutter/pages/formList.dart';
+import 'package:centaur_flutter/pages/home/client_home.dart';
+//import 'package:centaur_flutter/pages/home/home_admin.dart';
+//import 'package:centaur_flutter/pages/home/home_agente.dart';
+//import 'package:centaur_flutter/pages/home/home_cliente.dart';
+//import 'package:centaur_flutter/pages/tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:centaur_flutter/pages/registration_cliente.dart';
 import 'package:centaur_flutter/theme.dart';
@@ -115,9 +116,7 @@ void initState() {
                 context.read<UserCubit>().emit(user);
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context){
-                    //return ClientHome();
-                    //return AgentHome();
-                    return FormList();
+                    return ClientHome();
                   }
                 ));  // 
               }

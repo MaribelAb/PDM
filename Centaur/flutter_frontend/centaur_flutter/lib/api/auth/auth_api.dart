@@ -18,21 +18,36 @@ Future<dynamic> userAuth(String username, String password) async{
     "password": password
 
   };
-  var url = Uri.parse("$baseUrl/user/auth/login/");
-  var res = await http.post(url,body: body);
+  var url = Uri.parse("http://localhost:8000/user/api-token-auth/");
+  var res = await http.post(
+    url,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: jsonEncode(body),
+  );
 
   print(res.body);
   print(res.statusCode);
+
   if(res.statusCode == 200){
-    Map json = jsonDecode(res.body);
-    String token = json['key'];
-    var box = await Hive.openBox(tokenBox);
+    Map<String, dynamic> json = jsonDecode(res.body);
+    print('JSON!!!!:${json}');
+    String token = json['token'];
+    var box = await Hive.openBox('tokenBox');
     box.put("token", token);
-    User ? user = await getUser(token);
+    User? user = await getUser(token);
+    if (user != null) {
+      user.token = token;
+      List<dynamic> groupsJson = json['user']['groups'] ?? [];
+      List<String> groupNames = groupsJson.map((group) => group['name'].toString()).toList();
+      user.groups = groupNames;
+    }
+    //print("USER!!!!!: ${user?.groups?.toString()}");
     return user;
   }
   else{
-    Map json = jsonDecode(res.body);
+    Map<String, dynamic> json = jsonDecode(res.body);
     print(json);
     if (json.containsKey("username")){
       return json["username"][0];
@@ -53,10 +68,8 @@ Future<User?> getUser(String token) async {
   });
   //print(res.body);
   if(res.statusCode == 200){
-    var json = jsonDecode(res.body);
-
+    Map<String, dynamic> json = jsonDecode(res.body);
     User user = User.fromJson(json);
-    user.token = token;
     return user;
   }
   else{
@@ -262,7 +275,8 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Cam
 Future<List<Formulario>> obtenerFormularios() async {
   final String apiUrl = 'http://localhost:8000/user/getForm/';
   final response = await http.get(Uri.parse(apiUrl));
-
+  print('CONTENIDO: ${response.body}');
+  print('ESTADO: ${response.statusCode}');
   if (response.statusCode == 200) {
     final jsonData = json.decode(response.body);
     final List<dynamic> formData = jsonData['data'];
