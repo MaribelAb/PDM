@@ -58,7 +58,9 @@ class Usuario(AbstractBaseUser):
     objects = UserAccountManager()
 
 
-
+class Contenido(models.Model):
+    nombre = models.CharField('nombre', max_length=100)
+    valor = models.CharField('valor', max_length=500)
 
 class Ticket(models.Model):
     ALTA = 'alta'
@@ -75,6 +77,7 @@ class Ticket(models.Model):
     ]
     titulo = models.CharField('Titulo', max_length = 100)
     descripcion = models.CharField('Descripcion', max_length = 100)
+    contenido = models.ManyToManyField(Contenido, blank=True)
     solicitante = models.CharField('Solicitante', max_length = 100, blank=True)
     prioridad = models.CharField(max_length=6, choices=PRIORIDADES, blank=True)
     estado = models.CharField(max_length=10, choices=ESTADO, blank=True)
@@ -137,16 +140,23 @@ class Nota(models.Model):
 
 
     
-    
-    
+from django.contrib.auth import get_user_model    
+User = get_user_model()   
+
+from django.conf import settings
+from datetime import datetime, time, date
+
+def get_default_user():
+    User = get_user_model()
+    return User.objects.get_or_create(username='defaultuser')[0].id
 
 class Tarea(models.Model):
     titulo = models.CharField('Titulo', max_length = 100)
     descripcion = models.CharField('Descripcion', max_length = 100)
+    creador = models.CharField('Creador', max_length = 100)
+    fecha_ini = models.DateField(blank=True, null=True)
     fecha_fin = models.DateField(blank=True, null=True)
+    hora_ini = models.TimeField(blank=True, null=True)
+    hora_fin = models.TimeField(blank=True, null=True)
 
-class Agente(Usuario):
-    lista_tickets = models.ManyToManyField(Ticket, blank=True)
-    tareas = models.ManyToManyField(Tarea, blank=True)
-    def __str__(self):
-        return '{0},{1}'.format(self.apellido,self.nombre)
+    

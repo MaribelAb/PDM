@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/formulario_model.dart';
+import 'package:centaur_flutter/models/tarea_model.dart';
 import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import '../../constants.dart';
+import 'package:intl/intl.dart';
 
 
 Future<dynamic> userAuth(String username, String password) async{
@@ -270,8 +272,6 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Cam
   return hecho;
 }
 
-
-
 Future<List<Formulario>> obtenerFormularios() async {
   final String apiUrl = 'http://localhost:8000/user/getForm/';
   final response = await http.get(Uri.parse(apiUrl));
@@ -285,5 +285,124 @@ Future<List<Formulario>> obtenerFormularios() async {
   } else {
     print('Error al obtener los formularios: ${response.body}');
     return [];
+  }
+}
+
+Future<bool> crearTarea(String titulo, String descripcion, String ? creador, DateTime fecha_ini, DateTime hora_ini, DateTime fecha_fin, DateTime hora_fin) async {
+  String formattedFechaIni = DateFormat('yyyy-MM-dd').format(fecha_ini);
+  String formattedFechaFin = DateFormat('yyyy-MM-dd').format(fecha_fin);
+
+  // Format time strings in 'HH:mm:ss' format
+  String formattedHoraIni = DateFormat('HH:mm:ss').format(hora_ini);
+  String formattedHoraFin = DateFormat('HH:mm:ss').format(hora_fin);
+  final Map<String, dynamic> datos = {
+    'titulo': titulo,
+    'descripcion': descripcion,
+    'creador' : creador,
+    'fecha_ini': formattedFechaIni, // Convert DateTime to ISO 8601 string
+    'hora_ini': formattedHoraIni,
+    'fecha_fin': formattedFechaFin,
+    'hora_fin': formattedHoraFin,
+  };
+
+  final String apiUrl = 'http://localhost:8000/user/crearTarea/';
+  bool hecho = false;
+  
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${tokenBox}', // Ensure tokenBox is defined and contains a valid token
+      },
+      body: json.encode(datos),
+    );
+
+    if (response.statusCode == 201) {
+      print('Tarea creada exitosamente');
+      hecho = true;
+      return hecho;
+    } else {
+      print('Error al crear la tarea: ${response.body}');
+      // Handle other status codes if needed
+      throw Exception('Error al crear la tarea: ${response.body}');
+    }
+  } catch (e) {
+    print('Error inesperado: $e');
+    // Handle unexpected errors
+    throw Exception('Error inesperado al crear la tarea');
+  }
+}
+
+Future<List<Tarea>> obtenerTareas() async {
+  final String apiUrl = 'http://localhost:8000/user/getTarea';
+  final response = await http.get(Uri.parse(apiUrl));
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    final List<dynamic> TareaData = jsonData['data'];
+    final List<Tarea> tareas = TareaData.map((data) => Tarea.fromJson(data)).toList();
+    return tareas;
+  } else {
+    print('Error al obtener los formularios: ${response.body}');
+    return [];
+  }
+}
+
+Future<bool> logout() async {
+  final String apiUrl = 'http://localhost:8000/user/auth/logout/';
+  bool logged_out = false;
+  // Send POST request to log out
+  final response = await http.post(
+    Uri.parse(apiUrl),
+    // You may need to include any required headers here, such as authentication tokens
+  );
+
+  // Check if the request was successful
+  if (response.statusCode == 200) {
+    // Log out was successful
+    print('Logged out successfully');
+    logged_out = true;
+    return logged_out;
+  } else {
+    // Log out failed, handle error
+    print('Failed to log out. Status code: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    return logged_out;
+  }
+}
+
+Future <bool> editarVisibilidad(Formulario form) async {
+  Map<String, dynamic> data = {
+    'oculto' : !form.oculto
+  };
+  String jsonData = jsonEncode(data);
+
+  var url = Uri.parse('http://localhost:8000/user/updateForm/');
+  
+  try {
+    http.Response response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${tokenBox}',
+      },
+      body: jsonData,
+    );
+    
+    if (response.statusCode == 200) {
+      // La solicitud fue exitosa
+      print('PUT request successful');
+      print('Response: ${response.body}');
+      return true;
+    } else {
+      // La solicitud falló
+      print('PUT request failed with status: ${response.statusCode}');
+      print('Response: ${response.body}');
+      return false;
+    }
+  } catch (error) {
+    // Manejar cualquier error que ocurra durante la solicitud
+    print('Error making PUT request: $error');
+    return false;
   }
 }

@@ -1,5 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:centaur_flutter/api/auth/auth_api.dart';
+import 'package:centaur_flutter/models/user_cubit.dart';
+import 'package:centaur_flutter/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:google_sign_in/google_sign_in.dart';
@@ -49,6 +55,35 @@ class _DatePickerExampleState extends State<DatePickerExample> {
     );
   }
 
+  bool comprobar_tiempos() {
+  bool correcto = true;
+  
+  if (dateStart.isAfter(dateEnd) || 
+      (dateStart.isAtSameMomentAs(dateEnd) && timeStart.isAfter(timeEnd))) {
+    correcto = false;
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text('Error'),
+          content: Text('¡Un evento no puede empezar después de que haya acabado!'),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  
+  return correcto;
+}
+
+
   Future<void> _insertEvent() async {
     DateTime eventStart = combineDateAndTime(dateStart, timeStart);
     DateTime eventEnd = combineDateAndTime(dateEnd, timeEnd);
@@ -95,23 +130,7 @@ class _DatePickerExampleState extends State<DatePickerExample> {
           dateTime: eventEnd,
           timeZone: "GMT-7:00",
         );
-      if(!event.start!.dateTime!.isBefore(event.end!.dateTime!)){
-        showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 200,
-                          width: 250,
-                          decoration: const BoxDecoration(),
-                          child: Text('¡Un evento no puede empezar después de que haya acabado!'),
-                        ),
-                      );
-                    },
-                  );
-                  return;
-      }
+      
       String calendarId = "primary";
       await calendar.events.insert(event, calendarId);
       print("Event added to Google Calendar");
@@ -139,157 +158,208 @@ class _DatePickerExampleState extends State<DatePickerExample> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('CupertinoDatePicker Sample'),
+Widget build(BuildContext context) {
+  User user = context.read<UserCubit>().state;  
+  String? crea = user.username;
+  return CupertinoPageScaffold(
+    navigationBar: const CupertinoNavigationBar(
+      middle: Text('CupertinoDatePicker Sample'),
+    ),
+    child: DefaultTextStyle(
+      style: TextStyle(
+        color: CupertinoColors.label.resolveFrom(context),
+        fontSize: 22.0,
       ),
-      child: DefaultTextStyle(
-        style: TextStyle(
-          color: CupertinoColors.label.resolveFrom(context),
-          fontSize: 22.0,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                children: [
-                  Text('Nombre del evento:'),
-                  Expanded(
-                    child: CupertinoTextField(
-                      controller: titulo,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: [
+                Text('Nombre del evento:'),
+                Expanded(
+                  child: CupertinoTextField(
+                    controller: titulo,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text('Descripción del evento:'),
+                Expanded(
+                  child: CupertinoTextField(
+                    controller: descripcion,
+                    maxLines: 10,
+                    keyboardType: TextInputType.multiline,
+                    placeholder: 'Enter your text here',
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: CupertinoColors.black),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Text('Descripción del evento:'),
-                  Expanded(
-                    child: CupertinoTextField(
-                      controller: descripcion,
-                      maxLines: 10,
-                      keyboardType: TextInputType.multiline,
-                      placeholder: 'Enter your text here',
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: CupertinoColors.black),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            _DatePickerItem(
+              children: <Widget>[
+                const Text('Fecha de inicio'),
+                CupertinoButton(
+                  onPressed: () => _showDialog(
+                    CupertinoDatePicker(
+                      initialDateTime: dateStart,
+                      mode: CupertinoDatePickerMode.date,
+                      use24hFormat: true,
+                      showDayOfWeek: true,
+                      onDateTimeChanged: (DateTime newDate) {
+                        setState(() => dateStart = newDate);
+                      },
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 10),
-              _DatePickerItem(
-                children: <Widget>[
-                  const Text('Fecha de inicio'),
-                  CupertinoButton(
-                    onPressed: () => _showDialog(
-                      CupertinoDatePicker(
-                        initialDateTime: dateStart,
-                        mode: CupertinoDatePickerMode.date,
-                        use24hFormat: true,
-                        showDayOfWeek: true,
-                        onDateTimeChanged: (DateTime newDate) {
-                          setState(() => dateStart = newDate);
-                        },
-                      ),
-                    ),
-                    child: Text(
-                      '${dateStart.month}-${dateStart.day}-${dateStart.year}',
-                      style: const TextStyle(
-                        fontSize: 22.0,
-                      ),
+                  child: Text(
+                    '${dateStart.month}-${dateStart.day}-${dateStart.year}',
+                    style: const TextStyle(
+                      fontSize: 22.0,
                     ),
                   ),
-                ],
-              ),
-              _DatePickerItem(
-                children: <Widget>[
-                  const Text('Fecha de finalización'),
-                  CupertinoButton(
-                    onPressed: () => _showDialog(
-                      CupertinoDatePicker(
-                        initialDateTime: dateEnd,
-                        mode: CupertinoDatePickerMode.date,
-                        use24hFormat: true,
-                        showDayOfWeek: true,
-                        onDateTimeChanged: (DateTime newDate) {
-                          setState(() => dateEnd = newDate);
-                        },
-                      ),
-                    ),
-                    child: Text(
-                      '${dateEnd.month}-${dateEnd.day}-${dateEnd.year}',
-                      style: const TextStyle(
-                        fontSize: 22.0,
-                      ),
+                ),
+              ],
+            ),
+            _DatePickerItem(
+              children: <Widget>[
+                const Text('Fecha de finalización'),
+                CupertinoButton(
+                  onPressed: () => _showDialog(
+                    CupertinoDatePicker(
+                      initialDateTime: dateEnd,
+                      mode: CupertinoDatePickerMode.date,
+                      use24hFormat: true,
+                      showDayOfWeek: true,
+                      onDateTimeChanged: (DateTime newDate) {
+                        setState(() => dateEnd = newDate);
+                      },
                     ),
                   ),
-                ],
-              ),
-              _DatePickerItem(
-                children: <Widget>[
-                  const Text('Hora de inicio'),
-                  CupertinoButton(
-                    onPressed: () => _showDialog(
-                      CupertinoDatePicker(
-                        initialDateTime: timeStart,
-                        mode: CupertinoDatePickerMode.time,
-                        use24hFormat: true,
-                        onDateTimeChanged: (DateTime newTime) {
-                          setState(() => timeStart = newTime);
-                        },
-                      ),
-                    ),
-                    child: Text(
-                      '${timeStart.hour}:${timeStart.minute}',
-                      style: const TextStyle(
-                        fontSize: 22.0,
-                      ),
+                  child: Text(
+                    '${dateEnd.month}-${dateEnd.day}-${dateEnd.year}',
+                    style: const TextStyle(
+                      fontSize: 22.0,
                     ),
                   ),
-                ],
-              ),
-              _DatePickerItem(
-                children: <Widget>[
-                  const Text('Hora de finalización'),
-                  CupertinoButton(
-                    onPressed: () => _showDialog(
-                      CupertinoDatePicker(
-                        initialDateTime: timeEnd,
-                        mode: CupertinoDatePickerMode.time,
-                        use24hFormat: true,
-                        onDateTimeChanged: (DateTime newTime) {
-                          setState(() => timeEnd = newTime);
-                        },
-                      ),
-                    ),
-                    child: Text(
-                      '${timeEnd.hour}:${timeEnd.minute}',
-                      style: const TextStyle(
-                        fontSize: 22.0,
-                      ),
+                ),
+              ],
+            ),
+            _DatePickerItem(
+              children: <Widget>[
+                const Text('Hora de inicio'),
+                CupertinoButton(
+                  onPressed: () => _showDialog(
+                    CupertinoDatePicker(
+                      initialDateTime: timeStart,
+                      mode: CupertinoDatePickerMode.time,
+                      use24hFormat: true,
+                      onDateTimeChanged: (DateTime newTime) {
+                        setState(() => timeStart = newTime);
+                      },
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 10.0,),
-              ElevatedButton(
-                onPressed: () {
-                  _insertEvent();
-                },
-                child: const Text('Programar'),
-              ),
-            ],
-          ),
+                  child: Text(
+                    '${timeStart.hour}:${timeStart.minute}',
+                    style: const TextStyle(
+                      fontSize: 22.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            _DatePickerItem(
+              children: <Widget>[
+                const Text('Hora de finalización'),
+                CupertinoButton(
+                  onPressed: () => _showDialog(
+                    CupertinoDatePicker(
+                      initialDateTime: timeEnd,
+                      mode: CupertinoDatePickerMode.time,
+                      use24hFormat: true,
+                      onDateTimeChanged: (DateTime newTime) {
+                        setState(() => timeEnd = newTime);
+                      },
+                    ),
+                  ),
+                  child: Text(
+                    '${timeEnd.hour}:${timeEnd.minute}',
+                    style: const TextStyle(
+                      fontSize: 22.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.0,),
+            ElevatedButton(
+              onPressed: () async {
+                var auth = await crearTarea(titulo.text, descripcion.text, crea, dateStart, timeStart, dateEnd, timeEnd);
+
+                print('AUTH!!!!!: $auth');
+                var correcto = comprobar_tiempos();
+
+                if (auth == true && correcto == true) {
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoAlertDialog(
+                        title: Text('Creado'),
+                        content: Text('Tarea creada correctamente. ¿Sincronizar con google calendar?'),
+                        actions: [
+                          CupertinoDialogAction(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('No gracias'),
+                          ),
+                          CupertinoDialogAction(
+                            onPressed: () {
+                              _insertEvent();
+                              Navigator.pop(context); // Close the dialog after syncing
+                            },
+                            child: Text('Sincronizar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoAlertDialog(
+                        title: Text('Error'),
+                        content: Text('La tarea no se ha creado'),
+                        actions: [
+                          CupertinoDialogAction(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Aceptar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+              child: const Text('Crear'),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
 class _DatePickerItem extends StatelessWidget {

@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'dynamic_forms',
     'corsheaders',
 ]
-
+APPEND_SLASH=False
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
        'rest_framework.authentication.TokenAuthentication',

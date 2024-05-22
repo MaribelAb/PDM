@@ -4,6 +4,8 @@ import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/pages/calendar.dart';
+import 'package:centaur_flutter/pages/listaTareas.dart';
 //import 'package:centaur_flutter/navigation_service.dart';
 //import 'package:centaur_flutter/pages/form.dart';
 import 'package:flutter/material.dart';
@@ -71,11 +73,35 @@ class _AgentHomePageState extends State<AgentHomePage> {
       child: Center(child: Text("you just have to build them and...")),
       constraints: BoxConstraints.expand(),
     ),
-    Container(
-      color: Colors.green,
-      child: Center(child: Text("put them in the _widgetOption list")),
-      constraints: BoxConstraints.expand(),
-    )
+    //AGENDA
+    Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: ListaTareas()
+              )
+            ),
+          ),
+          SizedBox(height:10),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Calendar()),
+              );
+            },  
+            child: Text('Crear')
+          ),
+          SizedBox(height:10),
+        ]
+      ),
   ];
   }
   
@@ -128,7 +154,7 @@ class _AgentHomePageState extends State<AgentHomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            label: 'Inicio',
           ),
          
           BottomNavigationBarItem(
@@ -168,15 +194,15 @@ class _AgentHomePageState extends State<AgentHomePage> {
               destinations: const <NavigationRailDestination>[
                 NavigationRailDestination(
                   icon: Icon(Icons.home),
-                  label: Text('Home'),
+                  label: Text('Inicio'),
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.article), 
-                  label: Text('Formularios')
+                  label: Text('Mis tickets')
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.dashboard), 
-                  label: Text('Dashboard')
+                  label: Text('Agenda')
                 ),
               ], 
               selectedIndex: selectedIndex,

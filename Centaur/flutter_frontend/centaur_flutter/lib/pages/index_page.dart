@@ -53,7 +53,7 @@ class IndexPage extends StatelessWidget {
                 
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.amber,padding: EdgeInsets.only(top: 5,bottom: 5)),
-                  child: Text("Agente",style: TextStyle(color: Colors.black),),
+                  child: Text("Administración",style: TextStyle(color: Colors.black),),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context){

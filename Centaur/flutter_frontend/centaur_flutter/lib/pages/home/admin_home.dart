@@ -1,7 +1,10 @@
 
 
 import 'package:centaur_flutter/models/user_cubit.dart';
+import 'package:centaur_flutter/pages/calendar.dart';
 import 'package:centaur_flutter/pages/formList.dart';
+import 'package:centaur_flutter/pages/listaTareas.dart';
+import 'package:centaur_flutter/pages/logout_page.dart';
 import 'package:centaur_flutter/pages/view_bar_chart.dart';
 import 'package:centaur_flutter/pages/view_line_chart.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +59,10 @@ class _AdminHomeState extends State<AdminHome> {
       NavigationRailDestination(
         icon: Icon(Icons.view_agenda),
         label: Text('Agenda'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.logout),
+        label: Text('Cerrar sesión'),
       ),
     ];
 
@@ -153,32 +160,32 @@ class _AdminHomeState extends State<AdminHome> {
       ),
       //FORMULARIOS
       Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.all(1.0),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1),
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: FormList()
+              )
             ),
-            child: SizedBox(
-              height: 200,
-              child: FormList()
-            )
           ),
-        ),
-        SizedBox(height:10),
-        ElevatedButton(
-          onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateForm()),
-            );*/
-          },  
-          child: Text('Crear')
-        ),
-        SizedBox(height:10),
-      ]
+          SizedBox(height:10),
+          ElevatedButton(
+            onPressed: () {
+              /*Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateForm()),
+              );*/
+            },  
+            child: Text('Crear')
+          ),
+          SizedBox(height:10),
+        ]
     ),
       
       Container(//ESTADÍSTICAS
@@ -186,11 +193,47 @@ class _AdminHomeState extends State<AdminHome> {
         child: Center(child: Text("put them in the _widgetOption list")),
         constraints: BoxConstraints.expand(),
       ),
-      Container(//AGENDA
-        color: Colors.green,
-        child: Center(child: Text("put them in the _widgetOption list")),
-        constraints: BoxConstraints.expand(),
+      //AGENDA
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: ListaTareas()
+              )
+            ),
+          ),
+          SizedBox(height:10),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Calendar()),
+              );
+            },  
+            child: Text('Crear')
+          ),
+          SizedBox(height:10),
+        ]
       ),
+      //LOGOUT
+      Expanded(
+        child: Container(
+          margin: EdgeInsets.all(1.0),
+          
+          decoration: BoxDecoration(
+            border: Border.all(width: 1),
+          ),
+          child: LogoutPage()
+          )
+        ),
+      
     ];
 
     User user = context.read<UserCubit>().state;
@@ -252,18 +295,19 @@ class _AdminHomeState extends State<AdminHome> {
           if (MediaQuery.of(context).size.width > 640)
             Container(
               child: NavigationRail(
-                elevation: 5,
-                labelType: NavigationRailLabelType.all,
-                selectedLabelTextStyle: const TextStyle(color: Colors.blue),
-                unselectedLabelTextStyle: const TextStyle(color: Colors.amber),
-                onDestinationSelected: (selectedIndex) {
-                  setState(() {
-                    _selectedIndex = selectedIndex;
-                  });
-                },
-                destinations: destinations,
-                selectedIndex: _selectedIndex,
-              ),
+                    elevation: 5,
+                    labelType: NavigationRailLabelType.all,
+                    selectedLabelTextStyle: const TextStyle(color: Colors.blue),
+                    unselectedLabelTextStyle: const TextStyle(color: Colors.amber),
+                    onDestinationSelected: (selectedIndex) {
+                      setState(() {
+                        _selectedIndex = selectedIndex;
+                      });
+                    },
+                    destinations: destinations,
+                    selectedIndex: _selectedIndex,
+                  ),
+                
             ),
           Expanded(
             child: widgetOptions.elementAt(_selectedIndex),

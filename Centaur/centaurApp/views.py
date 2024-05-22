@@ -2,14 +2,14 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from centaurApp.models import Agente, Formulario, Usuario, Ticket
-from centaurApp.serializers import TicketSerializer, UserSerializer , AgentSerializer
+from centaurApp.models import  Formulario, Tarea, Usuario, Ticket
+from centaurApp.serializers import TicketSerializer, UserSerializer
 from rest_framework import status,views, response
 from rest_framework import authentication
 from django.contrib.auth.models import User
 from django.contrib.auth import logout ,authenticate, login 
 from rest_framework.authtoken.models import Token
-from .serializers import  FormularioSerializer, UserSerializer
+from .serializers import  FormularioSerializer, TareaSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -148,34 +148,24 @@ def postTicket(request):
     return Response(serializer.data)
 
 @csrf_exempt
-def prueba(request):
-    msg = 'nok'
-    if request.method == 'POST':
-    # Assuming your Flutter app sends JSON data
+def updateForm(request):
+    if request.method == 'PUT':
+        data = json.loads(request.body.decode('utf-8'))
+        form_id = data.get('id')
+            
         try:
-            # Load the JSON data from the request body
-            data = json.loads(request.body.decode('utf-8'))
-            
-            # Now you can access the data as a Python dictionary
-            # For example, if your Flutter app sends a key 'name', you can access it like this:
-            titulo = data.get('titulo')
-            descripcion = data.get('descripcion')
-            solicitante = data.get ('solicitante')
-
-            nuevo = Ticket.objects.create(titulo = titulo, descripcion = descripcion, solicitante = solicitante)
-            #nuevo.save
-            # Process the data as needed
-            # For example, you could save it to a database
-            
-            return JsonResponse(nuevo, {'message': 'Data received successfully'}, safe=False)
+            form = Formulario.objects.get(id=form_id)
+        except Formulario.DoesNotExist:
+            return JsonResponse({'error': 'Form does not exist'}, status=404)
         
-        except json.JSONDecodeError as e:
-            # Handle JSON decode error
-            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        serializer = TicketSerializer(form, data=data)
         
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'message': 'Ticket updated successfully'}, status=200)
+        return JsonResponse(serializer.errors, status=400)
     else:
-            # Return an error for other HTTP methods
-        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+        return JsonResponse({'error': 'Only PUT requests are allowed'}, status=405)
     
 
 
@@ -185,10 +175,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAdminUser,]
     authentication_classes = [authentication.BasicAuthentication,]
 
-class AgentViewSet(viewsets.ModelViewSet):
-  queryset = Agente.objects.all()  
-  permission_classes = [permissions.AllowAny]
-  serializer_class = AgentSerializer
+
 
 class LoginView(views.APIView):
     permission_classes = [permissions.AllowAny]
@@ -249,3 +236,52 @@ def getForms(request):
             return JsonResponse({'error': 'An error occurred while fetching forms'}, status=500)
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+    
+
+def getTareas(request):
+    if request.method == 'GET':
+        try:
+            app = Tarea.objects.all()
+            serializer = TareaSerializer(app, many=True)
+            return JsonResponse({'data': serializer.data, 'message': 'Data sent successfully'})
+        except Exception as e:
+            print(f"Error: {e}")  # Log the exception for debugging
+            return JsonResponse({'error': 'An error occurred while fetching forms'}, status=500)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+    
+@csrf_exempt
+def crear_tarea(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        #data['creador'] = request.user.id
+        print('CREAR TAREA:')
+        print(data)
+        serializer = TareaSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return JsonResponse({'message': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+@csrf_exempt
+def updateTarea(request):
+    if request.method == 'PUT':
+        
+        data = json.loads(request.body.decode('utf-8'))
+        tarea = data.get('id')
+        
+        try:
+            tarea = Tarea.objects.get(id=id)
+        except Ticket.DoesNotExist:
+            return JsonResponse({'error': 'Tarea does not exist'}, status=404)
+        
+        serializer = TareaSerializer(tarea, data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'message': 'Tarea updated successfully'}, status=200)
+        return JsonResponse(serializer.errors, status=400)
+    else:
+        return JsonResponse({'error': 'Only PUT requests are allowed'}, status=405)

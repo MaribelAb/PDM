@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from centaurApp.models import Agente, Ticket, Usuario
+from centaurApp.models import  Ticket, Usuario
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueTogetherValidator
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
-from .models import Formulario, Campo, Opcion
+from .models import Contenido, Formulario, Campo, Opcion, Tarea
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
@@ -22,10 +22,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-class AgentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Agente
-        fields = '__all__'
+
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,10 +59,20 @@ class UserSerializer(serializers.ModelSerializer):
  #           )
  #       ]
     
+class ContenidoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Contenido
+        fields = '__all__'
 
 class TicketSerializer(serializers.ModelSerializer):
+    contenido = ContenidoSerializer(many=True)
     class Meta:
         model = Ticket
+        fields = '__all__'
+
+class TareaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tarea
         fields = '__all__'
 
 
@@ -81,7 +88,7 @@ class OpcionSerializer(serializers.ModelSerializer):
 
 
 class CampoSerializer(serializers.ModelSerializer):
-    tipo = serializers.CharField(source='get_tipo_display', read_only=True)
+    #tipo = serializers.CharField(source='get_tipo_display', read_only=True)
     opciones = OpcionSerializer(many = True)
     class Meta:
         model = Campo
