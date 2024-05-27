@@ -1,6 +1,9 @@
 import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/pages/formList.dart';
+import 'package:centaur_flutter/pages/logout_page.dart';
+import 'package:centaur_flutter/pages/ticketList.dart';
 //import 'package:centaur_flutter/navigation_service.dart';
 //import 'package:centaur_flutter/pages/form.dart';
 //import 'package:centaur_flutter/pages/tickets.dart';
@@ -41,7 +44,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
+  bool misTickets=true;
   List<Widget> widgetOptions = <Widget>[
+    //INICIO
     Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -116,16 +121,55 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ]
     ),
-    Container(
-      color: Colors.green,
-      child: Center(child: Text("you just have to build them and...")),
-      constraints: BoxConstraints.expand(),
+    //FORMULARIOS
+    Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: FormList()
+              )
+            ),
+          ),
+          
+        ]
     ),
-    Container(
-      color: Colors.green,
-      child: Center(child: Text("put them in the _widgetOption list")),
-      constraints: BoxConstraints.expand(),
-    )
+    //MIS TICKETS
+    Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: TicketList(misTickets: true)
+              )
+            ),
+          ),
+          
+        ]
+    ),
+    //LOGOUT
+    Expanded(
+      child: Container(
+        margin: EdgeInsets.all(1.0),
+        
+        decoration: BoxDecoration(
+          border: Border.all(width: 1),
+        ),
+        child: LogoutPage()
+        )
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -169,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Inicio',
           ),
          
           BottomNavigationBarItem(
@@ -179,7 +223,11 @@ class _MyHomePageState extends State<MyHomePage> {
         
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard), 
-            label: 'Dashboard'
+            label: 'Mis Tickets'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout), 
+            label: 'Cerrar Sesión'
           ),
         ],
         currentIndex: selectedIndex,
@@ -208,7 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
               destinations: const <NavigationRailDestination>[
                 NavigationRailDestination(
                   icon: Icon(Icons.home),
-                  label: Text('Home'),
+                  label: Text('Inicio'),
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.article), 
@@ -216,7 +264,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.dashboard), 
-                  label: Text('Dashboard')
+                  label: Text('Mis Tickets')
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.logout),
+                  label: Text('Cerrar sesión'),
                 ),
               ], 
               selectedIndex: selectedIndex,

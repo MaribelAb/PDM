@@ -5,6 +5,7 @@ class Ticket{
   String ? token;
   String ? titulo;
   String ? descripcion;
+  List<Contenido> ?contenido;
   String ? solicitante;
   String ? asignee;
   String ? prioridad;
@@ -19,6 +20,7 @@ class Ticket{
   Ticket({
     this.titulo,
     this.descripcion,
+    this.contenido,
     this.solicitante,
     this.fecha_creacion,
     this.id,
@@ -32,20 +34,74 @@ class Ticket{
   });
 
   factory Ticket.fromJson(json){
+
+    List<Contenido>? contenidoList;
+  if (json['contenido'] != null) {
+    // Check if the "contenido" field is not null
+    if (json['contenido'] is List) {
+      // Check if "contenido" is a list
+      contenidoList = (json['contenido'] as List)
+          .map((contenidoJson) => Contenido.fromJson(contenidoJson))
+          .toList();
+    } else {
+      // If "contenido" is not a list, create a single Contenido object
+      contenidoList = [Contenido.fromJson(json['contenido'])];
+    }
+  }
+    
+      final titulo = json["titulo"] ?? '';
+      final descripcion = json["descripcion"] ?? '';
+      final contenido = contenidoList;
+      final solicitante = json["solicitante"] ?? '';
+      final asignee = json['encargado'] ?? '';
+      final prioridad = json['prioridad']?? '';
+      final estado = json['estado'];
+      final fecha_creacion = json["fecha_creacion"] != null ? DateTime.parse(json["fecha_creacion"]) : null;
+      final fecha_ini = json['fecha_ini'] != null ? DateTime.parse(json['fecha_ini']) : null;
+      final fecha_fin = json['fecha_fin'] != null ? DateTime.parse(json['fecha_fin']) : null;
+      final carpeta = json['carpeta'] ?? '';
+      final categoria = json['categoria'] ?? '';
+      final id = json["id"] ?? '';
     return Ticket(
-      titulo: json["titulo"] ?? '',
-      descripcion: json["descripcion"] ?? '',
-      solicitante:json["solicitante"] ?? '',
-      asignee : json['asignee'] ?? '',
-      prioridad: json['prioridad']?? '',
-      estado: json['estado'],
-      fecha_creacion: json["fecha_creacion"]?? '',
-      fecha_ini: json['fecha_ini']?? '',
-      fecha_fin: json['fecha_fin']?? '',
-      carpeta: json['carpeta']?? '',
-      categoria: json['categoría']?? '',
-      id: json["id"]?? '',
+      id: id,
+      titulo: titulo,
+      descripcion: descripcion,
+      contenido: contenido,
+      solicitante: solicitante,
+      asignee: asignee,
+      prioridad: prioridad,
+      estado: estado,
+      fecha_creacion: fecha_creacion,
+      fecha_ini: fecha_ini,
+      fecha_fin: fecha_fin,
+      carpeta: carpeta,
+      categoria: categoria,
     );
   }
 }
 
+class Contenido{
+  String ? nombre;
+  String ? valor;
+
+  Contenido({
+    required this.nombre,
+    required this.valor
+  });
+
+  factory Contenido.fromJson(Map<String, dynamic> json){
+    final nombre = json['nombre'] ?? '';
+    final valor = json['valor'] ?? '';
+    return Contenido(
+      nombre:nombre,
+      valor:valor
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nombre': nombre,
+      'valor': valor,
+    };
+  }
+}

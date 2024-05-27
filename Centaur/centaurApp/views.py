@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from centaurApp.models import  Formulario, Tarea, Usuario, Ticket
+from centaurApp.models import  Contenido, Formulario, Tarea, Usuario, Ticket
 from centaurApp.serializers import TicketSerializer, UserSerializer
 from rest_framework import status,views, response
 from rest_framework import authentication
@@ -30,6 +30,8 @@ from rest_framework import serializers, views, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
+from django.core.serializers import serialize
+from rest_framework import generics
 
 
 # Create your views here.
@@ -101,9 +103,46 @@ class CustomAuthToken(views.APIView):
         }, status=status.HTTP_200_OK)
 
 
-#class TicketViewSet(viewsets.ModelViewSet):
-#    queryset = Ticket.objects.all()
-#    serializer_class = TicketSerializer
+def user_list(request):
+    # Filter users where groups contain "agent"
+    agent_users = User.objects.filter(groups__name='Agent')
+    
+    # Extract usernames from the filtered queryset
+    usernames = [user.username for user in agent_users]
+
+    print(usernames)
+    
+    # Serialize the list of usernames to JSON
+    usernames_json = json.dumps(usernames)
+    
+    return JsonResponse({'usernames': usernames_json})
+
+def client_list(request):
+    # Filter users where groups contain "agent"
+    agent_users = User.objects.filter(groups__name='Client')
+    
+    # Extract usernames from the filtered queryset
+    usernames = [user.username for user in agent_users]
+
+    print(usernames)
+    
+    # Serialize the list of usernames to JSON
+    usernames_json = json.dumps(usernames)
+    
+    return JsonResponse({'usernames': usernames_json})
+
+def getAllUsers(request):
+    if request.method == 'GET':
+        try:
+            users = User.objects.all()
+            serializer = UserSerializer(users, many=True)
+            return JsonResponse({'data': serializer.data, 'message': 'Data sent successfully'})
+        except json.JSONDecodeError as e:
+            # Handle JSON decode error
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    else:
+        # Return an error for other HTTP methods
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
 @csrf_exempt
 def getTicket(request):
@@ -119,13 +158,20 @@ def getTicket(request):
         # Return an error for other HTTP methods
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
+def ticket_choices(request):
+    ticket_choices = {
+        'prioridades': Ticket.get_prioridad_choices(),
+        'estados': Ticket.get_estado_choices(),
+    }
+    return JsonResponse(ticket_choices)
+
 @csrf_exempt
 def updateTicket(request):
     if request.method == 'PUT':
         
         data = json.loads(request.body.decode('utf-8'))
         ticket_id = data.get('id')
-        
+        print(data)
         try:
             ticket = Ticket.objects.get(id=ticket_id)
         except Ticket.DoesNotExist:
@@ -140,32 +186,29 @@ def updateTicket(request):
     else:
         return JsonResponse({'error': 'Only PUT requests are allowed'}, status=405)
 
-@api_view(['POST'])
-def postTicket(request):
-    serializer = TicketSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
-
 @csrf_exempt
-def updateForm(request):
-    if request.method == 'PUT':
-        data = json.loads(request.body.decode('utf-8'))
-        form_id = data.get('id')
-            
-        try:
-            form = Formulario.objects.get(id=form_id)
-        except Formulario.DoesNotExist:
-            return JsonResponse({'error': 'Form does not exist'}, status=404)
-        
-        serializer = TicketSerializer(form, data=data)
-        
+def postTicket(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        contenido_data = data.pop('contenido', [])  # Extract contenido data
+        serializer = TicketSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({'message': 'Ticket updated successfully'}, status=200)
-        return JsonResponse(serializer.errors, status=400)
+            # Create Ticket instance
+            ticket = serializer.save()
+
+            # Create or get existing Contenido objects and associate them with the ticket
+            for contenido_item in contenido_data:
+                nombre = contenido_item.get('nombre')
+                valor = contenido_item.get('valor')
+                contenido, _ = Contenido.objects.get_or_create(nombre=nombre, valor=valor)
+                ticket.contenido.add(contenido)
+
+            return JsonResponse({'message': 'Ticket created successfully'}, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return JsonResponse({'error': 'Only PUT requests are allowed'}, status=405)
+        return JsonResponse({'message': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
     
 
 
@@ -236,6 +279,54 @@ def getForms(request):
             return JsonResponse({'error': 'An error occurred while fetching forms'}, status=500)
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+@csrf_exempt
+def updateFormVisibility(request):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        form_id = data.get('id')
+        oculto = data.get('oculto')
+
+        if form_id is None or oculto is None:
+            return JsonResponse({'error': 'Missing id or oculto parameter'}, status=400)
+
+        try:
+            form = Formulario.objects.get(id=form_id)
+        except Formulario.DoesNotExist:
+            return JsonResponse({'error': 'Form does not exist'}, status=404)
+
+        form.oculto = not oculto
+        form.save()
+
+        return JsonResponse({'message': 'Form updated successfully'}, status=200)
+
+    return JsonResponse({'error': 'Only PUT requests are allowed'}, status=405)
+
+
+@csrf_exempt
+def updateForm(request):
+    if request.method == 'PUT':
+        data = json.loads(request.body.decode('utf-8'))
+        form_id = data.get('id')
+        print('ID!!!:') 
+        print(form_id)   
+        try:
+            form = Formulario.objects.get(id=form_id)
+        except Formulario.DoesNotExist:
+            return JsonResponse({'error': 'Form does not exist'}, status=404)
+        
+        serializer = TicketSerializer(form, data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'message': 'Form updated successfully'}, status=200)
+        return JsonResponse(serializer.errors, status=400)
+    else:
+        return JsonResponse({'error': 'Only PUT requests are allowed'}, status=405)
     
 
 def getTareas(request):

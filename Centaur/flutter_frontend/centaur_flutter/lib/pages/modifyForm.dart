@@ -1,139 +1,111 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
-import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/formulario_model.dart';
-import 'package:centaur_flutter/models/ticket_cubit.dart';
-import 'package:centaur_flutter/models/ticket_model.dart';
-import 'package:centaur_flutter/pages/create_form.dart';
-//import 'package:centaur_flutter/pages/form.dart';
-//import 'package:centaur_flutter/pages/tickets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/widgets.dart';
 
-void main() => runApp(const ModifyForm());
+void main() => runApp(EditFormPage(formFields: [], formulario: null,));
 
-class ModifyForm extends StatelessWidget {
-  const ModifyForm({Key? key});
+class EditFormPage extends StatefulWidget {
+  final List<Campo>? formFields;
+  Formulario? formulario;
+
+  EditFormPage({required this.formFields, required this.formulario});
 
   @override
-  Widget build(BuildContext context) {
-    const appTitle = 'Formulario';
-    return MaterialApp(
-      title: appTitle,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(appTitle),
-        ),
-        body: ModifyFormPage(form: Formulario(titulo: '', descripcion: '', campos: [], categoria: '', oculto: true)),
-      ),
-    );
-  }
+  _EditFormPageState createState() => _EditFormPageState();
 }
 
-// Create a Form widget.
-class ModifyFormPage extends StatefulWidget {
-  final Formulario form;
-  ModifyFormPage({Key? key, required this.form}) : super(key: key);
-
-  @override
-  ModifyFormPageState createState() => ModifyFormPageState();
-}
-
-// Create a corresponding State class.
-// This class holds data related to the form.
-class ModifyFormPageState extends State<ModifyFormPage> {
-  final _formKey = GlobalKey<FormState>();
-  late Formulario formulario;
-  late int? id;
-  TextEditingController userController = TextEditingController();
-  Map<int, TextEditingController> textControllers = {};
-  Map<int, TextEditingController> dropdownControllers = {};
-
-  @override
-  void initState() {
-    super.initState();
-    formulario = widget.form;
-    formulario.campos?.forEach((campo) {
-    if (campo.tipo == 'Texto') {
-      textControllers[campo.id] = TextEditingController();
-    } else if (campo.tipo == 'Desplegable') {
-      dropdownControllers[campo.id] = TextEditingController();
-    }
-  });
-    
-  }
-
+class _EditFormPageState extends State<EditFormPage> {
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(title: Text('Editar Formulario')),
+      body: Column(
         children: [
-          Card(
-            child: Column(
-              children: [
-                Text("Título: ${formulario.titulo}"),
-              ],
+          Expanded(
+            child: ReorderableListView(
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+                  final item = widget.formFields?.removeAt(oldIndex);
+                  widget.formFields?.insert(newIndex, item!);
+                });
+              },
+              children: widget.formFields!.asMap()
+                  .map((index, campo) => MapEntry(index, buildEditableCampoWidget(campo, index)))
+                  .values
+                  .toList(),
             ),
           ),
-          Card(
-            child: Column(
-              children: [
-                Text("Descripción: ${formulario.descripcion}"),
-              ],
-            ),
+          ElevatedButton(
+            onPressed: () async {
+              bool success = await updateFormFields(widget.formulario, widget.formFields);
+              if (success) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Operación Exitosa'),
+                      content: Text('Formulario actualizado correctamente'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Aceptar'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Error'),
+                      content: Text('No se ha podido actualizar el formulario'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Aceptar'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+            child: Text('Guardar Cambios'),
           ),
-          Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _buildCamposWidgets(),
-            ),
-          ),
-          /*Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: ElevatedButton(
-              onPressed: () async {},
-              child: const Text('Enviar'),
-            ),
-          ).*/
         ],
       ),
     );
   }
 
-  List<Widget> _buildCamposWidgets() {
-    if (formulario.campos!.isNotEmpty) {
-      return formulario.campos!.map((campo) {
-        if (campo.tipo == 'Texto') {
-          return TextFormField(
-            controller: textControllers[campo.id],
-            decoration: InputDecoration(
-              labelText: campo.nombre,
-            ),
-          );
-        } else if (campo.tipo == 'Desplegable') {
-          return DropdownButtonFormField<Opcion>(
-            items: campo.opciones!.map<DropdownMenuItem<Opcion>>((Opcion opcion) {
-              return DropdownMenuItem<Opcion>(
-                value: opcion,
-                child: Text(opcion.nombre),
-              );
-            }).toList(),
-            onChanged: (Opcion? opcionSeleccionada) {
-              if (opcionSeleccionada != null) {
-                dropdownControllers[campo.id]!.text = opcionSeleccionada.valor;
-              }
-            },
-            decoration: InputDecoration(
-              labelText: campo.nombre,
-            ),
-          );
-        } else {
-          return Text('Campo no compatible: ${campo.nombre}');
-        }
-      }).toList();
-    } else {
-      return [Text('No hay campos disponibles')];
-    }
+  Widget buildEditableCampoWidget(Campo campo, int index) {
+    return ListTile(
+      key: ValueKey(index),
+      title: TextField(
+        controller: TextEditingController(text: campo.nombre),
+        onChanged: (newValue) {
+          setState(() {
+            campo.nombre = newValue;
+          });
+        },
+      ),
+      trailing: IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () {
+          setState(() {
+            widget.formFields?.removeAt(index);
+          });
+        },
+      ),
+    );
   }
 }

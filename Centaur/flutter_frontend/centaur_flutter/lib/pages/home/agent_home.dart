@@ -6,6 +6,8 @@ import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:centaur_flutter/pages/calendar.dart';
 import 'package:centaur_flutter/pages/listaTareas.dart';
+import 'package:centaur_flutter/pages/logout_page.dart';
+import 'package:centaur_flutter/pages/ticketList.dart';
 //import 'package:centaur_flutter/navigation_service.dart';
 //import 'package:centaur_flutter/pages/form.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ class _AgentHomeState extends State<AgentHome> {
   @override
   Widget build(BuildContext context) {
     User user = context.read<UserCubit>().state;
+    
   
 
     return MaterialApp(
@@ -55,6 +58,7 @@ class _AgentHomePageState extends State<AgentHomePage> {
   var items = 4;
   late List<Ticket> tickets;
   late List<Widget> widgetOptions;
+  bool misTickets = false;
 
   @override
   void initState() {
@@ -63,15 +67,53 @@ class _AgentHomePageState extends State<AgentHomePage> {
     //tickets = ListaTicketsPage(token: tokenBox).getListaTickets();
 
     widgetOptions = <Widget>[
-    Container(
-      color: Colors.green,
-      child: Center(child: Text("you just have to build them and...")),
-      constraints: BoxConstraints.expand(),
-    ),
-    Container(
-      color: Colors.green,
-      child: Center(child: Text("you just have to build them and...")),
-      constraints: BoxConstraints.expand(),
+    //TICKETS  
+    Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: TicketList(misTickets:false)
+              )
+            ),
+          ),
+          
+        ]
+      ),
+    //MIS TICKETS
+    Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: TicketList(misTickets:true)
+              )
+            ),
+          ),
+          SizedBox(height:10),
+          ElevatedButton(
+            onPressed: () {
+              /*Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateForm()),
+              );*/
+            },  
+            child: Text('Crear')
+          ),
+          SizedBox(height:10),
+        ]
     ),
     //AGENDA
     Column(
@@ -101,6 +143,17 @@ class _AgentHomePageState extends State<AgentHomePage> {
           ),
           SizedBox(height:10),
         ]
+    ),
+    //LOGOUT
+    Expanded(
+        child: Container(
+          margin: EdgeInsets.all(1.0),
+          
+          decoration: BoxDecoration(
+            border: Border.all(width: 1),
+          ),
+          child: LogoutPage()
+          )
       ),
   ];
   }
@@ -167,6 +220,10 @@ class _AgentHomePageState extends State<AgentHomePage> {
             icon: Icon(Icons.view_agenda), 
             label: 'Mi Agenda'
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout), 
+            label: 'Cerrar Sesión'
+          ),
         ],
         currentIndex: selectedIndex,
         selectedItemColor: Colors.amber,
@@ -203,6 +260,10 @@ class _AgentHomePageState extends State<AgentHomePage> {
                 NavigationRailDestination(
                   icon: Icon(Icons.dashboard), 
                   label: Text('Agenda')
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.logout), 
+                  label: Text('Cerrar Sesión')
                 ),
               ], 
               selectedIndex: selectedIndex,

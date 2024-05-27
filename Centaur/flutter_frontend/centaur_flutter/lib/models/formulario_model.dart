@@ -1,4 +1,5 @@
 class Formulario {
+  int id;
   String titulo;
   String descripcion;
   List<Campo> ?campos;
@@ -10,10 +11,11 @@ class Formulario {
     required this.descripcion,
     required this.campos,
     required this.categoria,
-    required this.oculto,
+    required this.oculto, required this.id,
   });
 
   factory Formulario.fromJson(Map<String, dynamic> json) {
+    final id = json['id'] ?? 0;
     final titulo = json['titulo'] ?? '';
     final descripcion = json['descripcion'] ?? '';
     final camposJson = json['campos'] as List<dynamic>;
@@ -21,6 +23,7 @@ class Formulario {
     final categoria = json['categoria'] ?? '';
     final oculto = json['oculto'] ?? true;
     return Formulario(
+      id:id,
       titulo: titulo,
       descripcion: descripcion,
       campos: campos,
@@ -33,7 +36,7 @@ class Formulario {
 
 class Campo {
   int id;
-  final String nombre;
+  late final String nombre;
   final String tipo;
   final List<Opcion>? opciones;
 
@@ -45,7 +48,7 @@ class Campo {
   });
 
   factory Campo.fromJson(Map<String, dynamic> json) {
-    final id = json['id'];
+    final id = json['id'] as int;
     final nombre = json['nombre'] ?? '';
     final tipo = json['tipo'] ?? '';
     final opcionesJson = json['opciones'] as List<dynamic>;

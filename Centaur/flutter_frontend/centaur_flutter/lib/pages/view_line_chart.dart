@@ -7,7 +7,12 @@ class ViewLineChart extends StatelessWidget {
     return LineChart(
       LineChartData(
         borderData: FlBorderData(show: false),
-        titlesData: FlTitlesData(show: false),
+        titlesData: FlTitlesData(
+          show: true,
+          topTitles: AxisTitles(
+            axisNameWidget: Text('Tickets abiertos este mes')
+          ),
+        ),
         gridData: FlGridData(show: false),
         lineBarsData: [
           LineChartBarData(

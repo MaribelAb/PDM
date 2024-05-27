@@ -11,6 +11,9 @@ class ViewBarChart extends StatelessWidget {
         barTouchData: BarTouchData(enabled: false),
         titlesData: FlTitlesData(
           show: true,
+          topTitles: AxisTitles(
+            axisNameWidget: Text('Tickets creados por mes')
+          ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,

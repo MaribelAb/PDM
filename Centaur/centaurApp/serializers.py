@@ -65,7 +65,7 @@ class ContenidoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TicketSerializer(serializers.ModelSerializer):
-    contenido = ContenidoSerializer(many=True)
+    contenido = ContenidoSerializer(many=True, read_only=True)
     class Meta:
         model = Ticket
         fields = '__all__'

@@ -29,12 +29,12 @@ Future<dynamic> userAuth(String username, String password) async{
     body: jsonEncode(body),
   );
 
-  print(res.body);
-  print(res.statusCode);
+  //print(res.body);
+  //print(res.statusCode);
 
   if(res.statusCode == 200){
     Map<String, dynamic> json = jsonDecode(res.body);
-    print('JSON!!!!:${json}');
+    //print('JSON!!!!:${json}');
     String token = json['token'];
     var box = await Hive.openBox('tokenBox');
     box.put("token", token);
@@ -50,7 +50,7 @@ Future<dynamic> userAuth(String username, String password) async{
   }
   else{
     Map<String, dynamic> json = jsonDecode(res.body);
-    print(json);
+
     if (json.containsKey("username")){
       return json["username"][0];
     }
@@ -81,10 +81,70 @@ Future<User?> getUser(String token) async {
   //print(res.statusCode);
 }
 
+Future<List<String?>?> getAgentUsers() async {
+  var url = Uri.parse("$baseUrl/user/getUsers/");
+  var res = await http.get(url, headers: {
+    'Authorization': 'Token $tokenBox',
+  });
+
+ 
+
+  if (res.statusCode == 200) {
+    // Parse the JSON response
+    Map<String, dynamic> data = json.decode(res.body);
+    // Extract the usernames from the string
+    String usernamesString = data['usernames'];
+    List<dynamic> usernamesList = json.decode(usernamesString);
+    // Convert the dynamic list to a list of strings
+    List<String?>? usernames = usernamesList.map((username) => username.toString()).toList();
+    return usernames;
+  } else {
+    throw Exception('Failed to load usernames');
+  }
+}
+
+Future<List<String?>?> getClientUsers() async {
+  var url = Uri.parse("$baseUrl/user/getClients/");
+  var res = await http.get(url, headers: {
+    'Authorization': 'Token $tokenBox',
+  });
+
+ 
+
+  if (res.statusCode == 200) {
+    // Parse the JSON response
+    Map<String, dynamic> data = json.decode(res.body);
+    // Extract the usernames from the string
+    String usernamesString = data['usernames'];
+    List<dynamic> usernamesList = json.decode(usernamesString);
+    // Convert the dynamic list to a list of strings
+    List<String?>? usernames = usernamesList.map((username) => username.toString()).toList();
+    return usernames;
+  } else {
+    throw Exception('Failed to load usernames');
+  }
+}
+
+Future<List<User>> getAllUsers() async {
+  var url = Uri.parse("$baseUrl/user/allUsers/");
+  var res = await http.get(url, headers: {
+    'Authorization': 'Token $tokenBox',
+  });
+
+  print(res.body);
+
+  if (res.statusCode == 200) {
+    Map<String, dynamic> jsonResponse = json.decode(res.body);
+    List<dynamic> usersJson = jsonResponse['data'];
+    return usersJson.map((userJson) => User.fromJson(userJson)).toList();
+  } else {
+    throw Exception('Failed to load users');
+  }
+}
 
 
 
-Future<dynamic> registerUser(String username,String email,String password,String confirmPasswd) async {
+Future<List<dynamic>> registerUser(String username, String email, String password, String confirmPasswd) async {
   Map<String, dynamic> data = {
     "username": username,
     "email": email,
@@ -92,48 +152,44 @@ Future<dynamic> registerUser(String username,String email,String password,String
     "password2": confirmPasswd,
   };
 
-  var url = Uri.parse("localhost:8000/user/auth/registration/");
-  var res = await http.post(url,body: data);
+  var url = Uri.parse('http://localhost:8000/user/auth/registration/');
+  var res = await http.post(url, body: data);
   //print(res.body);
-  if(res.statusCode == 200 || res.statusCode == 201){
-    Map json = jsonDecode(res.body);
 
-    if(json.containsKey("key")){
+  if (res.statusCode == 200 || res.statusCode == 201) {
+    Map<String, dynamic> json = jsonDecode(res.body);
+
+    if (json.containsKey("key")) {
       String token = json["key"];
-      var a= await getUser(token);
-      if (a != null){
-        User user = a;
-        return user;
+      var user = await getUser(token);
+      if (user != null) {
+        return [user, res.body];
+      } else {
+        return [null, res.body];
       }
-      else{
-        return null;
-      } 
     }
-    
-  }
-  else if (res.statusCode == 400){
-     Map json = jsonDecode(res.body);
-    if(json.containsKey("username")){
-      return json["username"][0];
-    } else if(json.containsKey("password")){
-      return json["password"][0];
+  } else if (res.statusCode == 400) {
+    Map<String, dynamic> json = jsonDecode(res.body);
+    if (json.containsKey("username")) {
+      return [json["username"][0], null];
+    } else if (json.containsKey("password")) {
+      return [json["password"][0], null];
     }
-  }
-  else{
-    print(res.body);
-    print(res.statusCode);
-    return null;
   }
   
-  //print(res.statusCode);
+  return [null, res.body];
 }
 
-Future<List<Ticket>> getTickets(String token) async {
+
+
+Future<List<Ticket>> getTickets() async {
   List<Ticket> tickets = [];
-  var url = Uri.parse("http://localhost:8000/user/getTicket");
+  var url = Uri.parse("http://localhost:8000/user/getTicket/");
   var res = await http.get(url, headers: {
-    'Authorization': 'Token $token',
+    'Authorization': 'Token $tokenBox',
   });
+
+  //print(res.body);
   
   if (res.statusCode == 200) {
     final Map<String, dynamic> jsonData = jsonDecode(res.body);
@@ -145,49 +201,85 @@ Future<List<Ticket>> getTickets(String token) async {
   }
 }
 
+Future<bool?> createTicket(Formulario form, User user, Map<int, String> campo_texto, Map<int,String> campo_drop) async {
+  
 
-
-Future<bool?> sendForm(String tit, String desc, String sol) async {
   bool sent = false;
+  List<Contenido> contenido = [];
+  DateTime creacion = DateTime.now();
+  String formattedFechaCrea = DateFormat('yyyy-MM-dd').format(creacion);
+
+  for (var campo in form.campos!) {
+    String valor = campo.tipo == 'Texto' ? campo_texto[campo.id] ?? '' : campo_drop[campo.id] ?? '';
+    contenido.add(Contenido(nombre: campo.nombre, valor: valor));
+  }
+
   Map<String, dynamic> data = {
-    "titulo": tit,
-    "descripcion": desc,
-    "solicitante": sol,
+    "titulo": form.titulo,
+    "descripcion": form.descripcion,
+    'contenido': contenido,
+    'solicitante':user.username,
+    'fecha_creacion' : formattedFechaCrea,
   };
-  String jsonData = jsonEncode(data);
-  var url = Uri.parse("http://localhost:8000/user/centaurApp/");
+  
+  var url = Uri.parse('http://localhost:8000/user/postTicket/'); // Replace with your backend URL
   try {
     http.Response response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${tokenBox}',
       },
-      body: jsonData, 
+      body: jsonEncode(data),
     );
 
-    // Check the response status code
-    if (response.statusCode == 200 || response.statusCode == 500) {
-      // Request was successful, handle the response data here
+    if (response.statusCode == 201) {
       print('POST request successful');
       print('Response: ${response.body}');
       sent = true;
     } else {
-      // Request failed
       print('POST request failed with status: ${response.statusCode}');
       print('Response: ${response.body}');
     }
   } catch (error) {
-    // Handle any errors that occurred during the request
     print('Error making POST request: $error');
   }
+
   return sent;
 }
 
-Future<bool> modifyTicket(int ident, String tit, String desc, String token) async {
+Future<Map<String, dynamic>> getTicketChoices() async {
+  var url = Uri.parse('http://localhost:8000/user/getChoices/');
+  var res = await http.get(url, headers: {
+    'Authorization': 'Token $tokenBox',
+  });
+
+  if (res.statusCode == 200) {
+    return jsonDecode(res.body);
+  } else {
+    // Handle error response
+    throw Exception('Failed to load ticket choices');
+  }
+}
+
+
+Future<bool> modifyTicket(Ticket tick, int? ident, String? tit, String? desc, String? asignee, String? prio, String? estado)  async {
+  
+
+  if(asignee == null)
+    asignee = tick.asignee;
+  if(prio == null)
+    prio = tick.prioridad;
+  if(estado == null)
+    estado = tick.estado;  
+
   Map<String, dynamic> data = {
     "id": ident,
     "titulo": tit,
     "descripcion": desc,
+    'encargado': asignee,
+    'prioridad': prio,
+    'estado': estado,
   };
   String jsonData = jsonEncode(data);
 
@@ -198,7 +290,7 @@ Future<bool> modifyTicket(int ident, String tit, String desc, String token) asyn
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Token $token', // Incluye el token de autenticación en el encabezado
+        'Authorization': 'Token $tokenBox', // Incluye el token de autenticación en el encabezado
       },
       body: jsonData,
     );
@@ -228,7 +320,7 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Cam
     'descripcion': descripcion,
     'campos': [],
   };
-  print(campos);
+  //print(campos);
   for (Campo campo in campos) {
     if (campo.tipo == 'Texto') {
       datos['campos'].add({
@@ -275,8 +367,7 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Cam
 Future<List<Formulario>> obtenerFormularios() async {
   final String apiUrl = 'http://localhost:8000/user/getForm/';
   final response = await http.get(Uri.parse(apiUrl));
-  print('CONTENIDO: ${response.body}');
-  print('ESTADO: ${response.statusCode}');
+
   if (response.statusCode == 200) {
     final jsonData = json.decode(response.body);
     final List<dynamic> formData = jsonData['data'];
@@ -372,12 +463,14 @@ Future<bool> logout() async {
 }
 
 Future <bool> editarVisibilidad(Formulario form) async {
+  
   Map<String, dynamic> data = {
-    'oculto' : !form.oculto
+    'id':form.id,
+    'oculto' : form.oculto,
   };
   String jsonData = jsonEncode(data);
 
-  var url = Uri.parse('http://localhost:8000/user/updateForm/');
+  var url = Uri.parse('http://localhost:8000/user/updateFormVis/');
   
   try {
     http.Response response = await http.put(
@@ -405,4 +498,41 @@ Future <bool> editarVisibilidad(Formulario form) async {
     print('Error making PUT request: $error');
     return false;
   }
+}
+
+Future <bool> updateFormFields(Formulario? form, List<Campo>? campos) async {
+  final url = 'http://localhost:8000/user/updateForm/';
+  form?.campos = campos;
+  List<Map<String, dynamic>> fieldsData = campos!.map((campo) {
+    return {
+      'name': campo.nombre,
+      'type': campo.tipo,
+      'options': campo.opciones?.map((opcion) => opcion.nombre).toList() ?? [],
+    };
+  }).toList();
+
+  final response = await http.put(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode({
+      'id': form?.id,
+      'titulo':form?.titulo,
+      'descripcion':form?.descripcion,
+      'fields': fieldsData,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+      // La solicitud fue exitosa
+      print('PUT request successful');
+      print('Response: ${response.body}');
+      return true;
+    } else {
+      // La solicitud falló
+      print('PUT request failed with status: ${response.statusCode}');
+      print('Response: ${response.body}');
+      return false;
+    }
 }

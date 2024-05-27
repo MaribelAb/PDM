@@ -2,7 +2,7 @@ import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/tarea_model.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
-import 'package:centaur_flutter/pages/modifyForm.dart';
+import 'package:centaur_flutter/pages/rellenarForm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 //import 'tu_archivo.dart'; // Reemplaza "tu_archivo.dart" con el nombre de tu archivo que contiene la función getTickets

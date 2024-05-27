@@ -61,6 +61,8 @@ class Usuario(AbstractBaseUser):
 class Contenido(models.Model):
     nombre = models.CharField('nombre', max_length=100)
     valor = models.CharField('valor', max_length=500)
+    def __str__(self):
+       return '{0}'.format(self.nombre)
 
 class Ticket(models.Model):
     ALTA = 'alta'
@@ -75,12 +77,22 @@ class Ticket(models.Model):
     ESTADO =[
         (ABIERTO, "Abierto"), (EN_CURSO, "En curso"), (CERRADO, "Cerrado")
     ]
+
+    @classmethod
+    def get_prioridad_choices(cls):
+        return [choice[0] for choice in cls.PRIORIDADES]
+
+    @classmethod
+    def get_estado_choices(cls):
+        return [choice[0] for choice in cls.ESTADO]
+    
     titulo = models.CharField('Titulo', max_length = 100)
     descripcion = models.CharField('Descripcion', max_length = 100)
     contenido = models.ManyToManyField(Contenido, blank=True)
     solicitante = models.CharField('Solicitante', max_length = 100, blank=True)
-    prioridad = models.CharField(max_length=6, choices=PRIORIDADES, blank=True)
-    estado = models.CharField(max_length=10, choices=ESTADO, blank=True)
+    encargado = models.CharField('Encargado', max_length = 100, blank=True)
+    prioridad = models.CharField(max_length=6, choices=PRIORIDADES, default=BAJA)
+    estado = models.CharField(max_length=10, choices=ESTADO, default=ABIERTO)
    # encargado = models.ForeignKey(
    #     "Agente",
    #     on_delete=models.CASCADE,

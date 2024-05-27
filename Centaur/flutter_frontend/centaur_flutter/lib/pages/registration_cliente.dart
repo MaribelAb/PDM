@@ -73,43 +73,46 @@ class _SignUpClientState extends State<SignUpClient> {
             title: 'Regístrate',
             margin: EdgeInsets.only(top: 50),
             onTap: () async {
-              var authRes = await registerUser(
+              List<dynamic> authRes = await registerUser(
                 usernameController.text,
                 emailController.text,
                 passwordController.text,
-                confirmPasswdController.text
+                confirmPasswdController.text,
               );
-              
 
-              if(authRes.runtimeType == String){
-                // ignore: use_build_context_synchronously
+              if (authRes[0] == null) {
+                // Registration failed, display error message
                 showDialog(
-                  context: context, 
-                  builder: (context){
+                  context: context,
+                  builder: (context) {
                     return Dialog(
                       child: Container(
                         alignment: Alignment.center,
                         height: 200,
                         width: 250,
-                        decoration: const BoxDecoration(),
-                        child: Text(authRes)),
+                        decoration: BoxDecoration(),
+                        child: Text(authRes[1]),
+                      ),
                     );
-                  }
+                  },
                 );
-              }
-              else if(authRes.runtimeType == User){
-                User user = authRes;
-                List<String> groupnames = ['Client'];
-                user.groups = groupnames;
-                context.read<UserCubit>().emit(user);
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context){
-                    return ClientHome();
-                  }
-                ));  // 
+              } else {
+                // Registration successful
+                if (authRes[0] is User) {
+                  User user = authRes[0] as User;
+                  List<String> groupnames = ['Client'];
+                  user.groups = groupnames;
+                  context.read<UserCubit>().emit(user);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return ClientHome();
+                    },
+                  ));
+                }
               }
             },
           ),
+
           Container(
             margin: EdgeInsets.only(
               top: 40,

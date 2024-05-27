@@ -7,7 +7,7 @@ import 'package:centaur_flutter/pages/create_form.dart';
 /*import 'package:centaur_flutter/pages/create_form.dart';
 import 'package:centaur_flutter/pages/form.dart';
 import 'package:centaur_flutter/pages/modificarTicket.dart';*/
-import 'package:centaur_flutter/pages/modifyForm.dart';
+import 'package:centaur_flutter/pages/rellenarForm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 //import 'tu_archivo.dart'; // Reemplaza "tu_archivo.dart" con el nombre de tu archivo que contiene la función getTickets
@@ -48,12 +48,12 @@ class _FormListState extends State<FormList> {
   @override
   Widget build(BuildContext context) {
     late String estado;
+    String sub;
     User user = context.read<UserCubit>().state;
     bool cliente = false;
-    if (user.groups!.contains('Cliente')){
+    if (user.groups!.contains('Client')){
       cliente = true;
     }
-
     List<Formulario> filteredFormularios = cliente
       ? _formularios.where((formulario) => !formulario.oculto).toList()
       : _formularios;
@@ -77,11 +77,17 @@ class _FormListState extends State<FormList> {
                   itemCount: _formularios.length,
                   itemBuilder: (context, index) {
                     Formulario formulario = _formularios[index];
+                   
+                      
                     if(formulario.oculto == true){
                       estado = 'Este formulario está oculto';
                     }
                     else
                       estado = 'Este formulario está visible';
+                    
+                    if(cliente){sub = formulario.descripcion;}
+                      
+                    else{sub=estado;}
                     return ListTile(
                       
                       leading: Visibility(
@@ -107,7 +113,7 @@ class _FormListState extends State<FormList> {
                             else{
                               AlertDialog(
                                 title: Text('Error'),
-                                content: Text('Nose ha podido cambiar la visibilidad'),
+                                content: Text('No se ha podido cambiar la visibilidad'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -123,12 +129,12 @@ class _FormListState extends State<FormList> {
                         ),
                       ),
                       title: Text(formulario.titulo),
-                      subtitle: Text(estado),
+                      subtitle: Text(sub),
                       trailing: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ModifyFormPage(form: formulario)),
+                            MaterialPageRoute(builder: (context) => RellenarFormPage(form: formulario)),
                           );
                         },
                         child: Text('Ver Formulario'),

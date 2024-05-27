@@ -1,10 +1,14 @@
 
 
+import 'package:centaur_flutter/api/auth/auth_api.dart';
+import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/pages/calendar.dart';
+import 'package:centaur_flutter/pages/create_form.dart';
 import 'package:centaur_flutter/pages/formList.dart';
 import 'package:centaur_flutter/pages/listaTareas.dart';
 import 'package:centaur_flutter/pages/logout_page.dart';
+import 'package:centaur_flutter/pages/ticketList.dart';
 import 'package:centaur_flutter/pages/view_bar_chart.dart';
 import 'package:centaur_flutter/pages/view_line_chart.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +28,12 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome> {
   int _selectedIndex = 0;
   PageController _pageController = PageController();
+  List<String?>? _agentes = [];
+  List<String?>? _clientes = [];
+  List<User?>? _usuarios = [];
+  bool _isLoading = true;
+  List<Ticket> _tickets = [];
+  bool misTickets = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -36,6 +46,77 @@ class _AdminHomeState extends State<AdminHome> {
     _pageController.dispose();
     super.dispose();
   }
+
+  Future<void> _getAllUsers() async {
+    try {
+      List<User?>? usuarios = await getAllUsers();
+      setState(() {
+        _usuarios = usuarios;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error al cargar los usuarios (codigo): $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _getAgentes() async {
+    try {
+      List<String?>? agentes = await getAgentUsers();
+      setState(() {
+        _agentes = agentes;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error al cargar los usuarios (codigo): $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _getClientes() async {
+    try {
+      List<String?>? clientes = await getClientUsers();
+      setState(() {
+        _clientes = clientes;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error al cargar los usuarios (codigo): $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadTickets() async {
+    try {
+      List<Ticket> tickets = await getTickets();
+      setState(() {
+        _tickets = tickets;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error al cargar los tickets (codigo): $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getAgentes();
+    _getClientes();
+    _loadTickets();
+    _getAllUsers();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +148,98 @@ class _AdminHomeState extends State<AdminHome> {
     ];
 
     List<Widget> widgetOptions = <Widget>[
+      Column(
+        children: [
+          Center(child: Text('Usuarios'),),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: [
+                    DataColumn(label: Text('Nombre de usuario')),
+                    DataColumn(label: Text('Email')),
+                    DataColumn(label: Text('Grupo')),
+                    DataColumn(label: Text('Acción'))
+                  ], 
+                  rows: _usuarios!.map((usuario){
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(usuario?.username ?? 'No Title')),
+                        DataCell(Text(usuario?.email ?? 'N/A')),
+                        DataCell(Text(usuario?.groups.toString() ?? 'N/A')),
+                        DataCell(
+                          ElevatedButton(
+                          onPressed: (){
+
+                          }, 
+                          child: Text('Administrar')
+                          )
+                        )
+                      ]
+                    );
+                  }).toList(),
+                ),
+              )
+            )
+          ),
+          
+        ],
+      ),
+      
+      //MIS TICKETS
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: TicketList(misTickets: true)
+              )
+            ),
+          ),
+          
+        ]
+      ),
+      //FORMULARIOS
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+              ),
+              child: SizedBox(
+                height: 200,
+                child: FormList()
+              )
+            ),
+          ),
+          SizedBox(height:10),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateForm()),
+              );
+            },  
+            child: Text('Crear')
+          ),
+          SizedBox(height:10),
+        ]
+    ),
+      
       Column(//INICIO
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -135,8 +308,23 @@ class _AdminHomeState extends State<AdminHome> {
                   decoration: BoxDecoration(
                     border: Border.all(width: 1),
                   ),
-                  child: Center(
-                      child: Text("you just have to build them and...")),
+                  child: Column(
+                    children: [
+                      Center(child: Text('Usuarios')),
+                      Row(
+                        children: [
+                          Text('Número de agentes: '),
+                          Text(_agentes!.length.toString())
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Número de clientes: '),
+                          Text(_clientes!.length.toString())
+                        ],
+                      )
+                    ],
+                  )
                 ),
               ),
               Expanded(
@@ -145,53 +333,40 @@ class _AdminHomeState extends State<AdminHome> {
                   decoration: BoxDecoration(
                     border: Border.all(width: 1),
                   ),
-                  child: Center(
-                      child: Text("you just have to build them and...")),
+                  child: Column(
+                    children: [
+                      Center(child: Text('Tickets')),
+                      Row(
+                        children: [
+                          Text('Número de tickets creados: '),
+                          Text(_tickets.length.toString())
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Número de tickets resueltos: '),
+                          Text(_tickets.where((ticket) => ticket.estado == 'cerrado').length.toString())
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Número de tickets en curso: '),
+                          Text(_tickets.where((ticket) => ticket.estado == 'en_curso').length.toString())
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Número de tickets abiertos: '),
+                          Text(_tickets.where((ticket) => ticket.estado == 'abierto').length.toString())
+                        ],
+                      )
+                    ],
+                  )
                 ),
               ),
             ],
           ),
         ],
-      ),
-      Container(//MIS TICKETS
-        color: Colors.green,
-        child: Center(child: Text("you just have to build them and...")),
-        constraints: BoxConstraints.expand(),
-      ),
-      //FORMULARIOS
-      Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(1.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 1),
-              ),
-              child: SizedBox(
-                height: 200,
-                child: FormList()
-              )
-            ),
-          ),
-          SizedBox(height:10),
-          ElevatedButton(
-            onPressed: () {
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CreateForm()),
-              );*/
-            },  
-            child: Text('Crear')
-          ),
-          SizedBox(height:10),
-        ]
-    ),
-      
-      Container(//ESTADÍSTICAS
-        color: Colors.green,
-        child: Center(child: Text("put them in the _widgetOption list")),
-        constraints: BoxConstraints.expand(),
       ),
       //AGENDA
       Column(
@@ -232,7 +407,7 @@ class _AdminHomeState extends State<AdminHome> {
           ),
           child: LogoutPage()
           )
-        ),
+      ),
       
     ];
 
