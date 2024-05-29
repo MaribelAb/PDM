@@ -101,42 +101,7 @@ if (misTickets == true && agente == true){
             columns: _buildColumns(cliente),
             rows: _buildRows(cliente),
           )
-            /*columns: [
-              DataColumn(label: Text('Título')),
-              DataColumn(label: Text('Solicitante')),
-              DataColumn(label: Text('Responsable')),
-              DataColumn(label: Text('Prioridad')),
-              DataColumn(label: Text('Estado')),
-              DataColumn(label: Text('Acciones')),
-            ],
-            rows: _tickets.map((ticket) {
-              List<DataCell> cells = [
-                DataCell(Text(ticket.titulo ?? 'No Title')),
-                DataCell(Text(ticket.solicitante ?? 'N/A')),
-                DataCell(Text(ticket.asignee ?? 'N/A')),
-              ];
-              if (!cliente) {
-                cells.add(DataCell(Text(ticket.prioridad ?? 'N/A')));
-              }
-              cells.addAll([
-                DataCell(Text(ticket.estado ?? 'N/A')),
-                DataCell(
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TicketViewPage(ticket: ticket),
-                        ),
-                      );
-                    },
-                    child: Text('Ver Ticket'),
-                  ),
-                ),
-              ]);
-              return DataRow(cells: cells);
-            }).toList(),
-          ),*/
+            
         ),
       ),
               

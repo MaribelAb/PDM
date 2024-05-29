@@ -122,7 +122,7 @@ String dropdownValue = list.first;
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => FormList()),
+                            MaterialPageRoute(builder: (context) => FormList('')),
                           );
                         },
                         child: Text('Aceptar'),

@@ -1,7 +1,9 @@
 import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/navigation_service.dart';
 import 'package:centaur_flutter/pages/formList.dart';
+import 'package:centaur_flutter/pages/inicioCli.dart';
 import 'package:centaur_flutter/pages/logout_page.dart';
 import 'package:centaur_flutter/pages/ticketList.dart';
 //import 'package:centaur_flutter/navigation_service.dart';
@@ -48,78 +50,22 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> widgetOptions = <Widget>[
     //INICIO
     Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber,padding: EdgeInsets.only(top: 5,bottom: 5)),
-              child: Text("Comunicación",style: TextStyle(color: Colors.black),),
-              onPressed: () {
-                /*BuildContext? context = NavigationService.navigatorKey.currentContext;
-                Navigator.of(context!).push(MaterialPageRoute(
-                  builder: (context){
-                    return ListaTicketsPage(token: tokenBox,);
-                  }
-                )); */
-              }
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber,padding: EdgeInsets.only(top: 5,bottom: 5)),
-              child: Text("Incidencias",style: TextStyle(color: Colors.black),),
-              onPressed: () {}
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber,padding: EdgeInsets.only(top: 5,bottom: 5)),
-              child: Text("Quejas",style: TextStyle(color: Colors.black),),
-              onPressed: () {}
-            ),
-            
-          ],
-        ),
-        SearchBar(
-
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: Container( 
-                margin: EdgeInsets.all(1.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 1,
-                  )
-                ),
-                child: Center(child: Text("you just have to build them and...")),
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(1.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
               ),
+              child: SizedBox(
+                height: 200,
+                child: ClientIni()
+              )
             ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(1.0), 
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 1,
-                  )
-                ),
-                child: Center(child: Text("you just have to build them and...")),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(1.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 1,
-                  )
-                ),
-                child: Center(child: Text("you just have to build them and...")),
-              ),
-            ),
-          ],
-        )
-      ]
+          ),
+          
+        ]
     ),
     //FORMULARIOS
     Column(
@@ -133,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: SizedBox(
                 height: 200,
-                child: FormList()
+                child: FormList('')
               )
             ),
           ),
@@ -182,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+  
+  
 
     User user = context.read<UserCubit>().state;
     return Scaffold(
