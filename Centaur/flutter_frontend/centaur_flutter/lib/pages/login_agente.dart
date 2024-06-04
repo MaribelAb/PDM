@@ -42,6 +42,7 @@ class _SignInAgentState extends State<SignInAgent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       backgroundColor: bgColor,
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),

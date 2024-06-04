@@ -8,6 +8,7 @@ import 'package:centaur_flutter/pages/calendar.dart';
 import 'package:centaur_flutter/pages/listaTareas.dart';
 import 'package:centaur_flutter/pages/logout_page.dart';
 import 'package:centaur_flutter/pages/ticketList.dart';
+import 'package:centaur_flutter/theme.dart';
 //import 'package:centaur_flutter/navigation_service.dart';
 //import 'package:centaur_flutter/pages/form.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class _AgentHomePageState extends State<AgentHomePage> {
                 MaterialPageRoute(builder: (context) => CreateForm()),
               );*/
             },  
-            child: Text('Crear')
+            child: Text('Crear', style: normalStyle,)
           ),
           SizedBox(height:10),
         ]
@@ -195,7 +196,7 @@ class _AgentHomePageState extends State<AgentHomePage> {
                 child: Text(
                   '¡Bienvenido ${user.username}!',
                   textAlign: TextAlign.center, // Center-align the text
-                  style: TextStyle(fontSize: 20), // Adjust the font size as needed
+                  style: greetingStyle, // Adjust the font size as needed
                 ),
               ),
             ],

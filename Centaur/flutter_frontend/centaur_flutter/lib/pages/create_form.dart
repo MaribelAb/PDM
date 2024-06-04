@@ -1,11 +1,11 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/formulario_model.dart';
 import 'package:centaur_flutter/pages/formList.dart';
+import 'package:centaur_flutter/pages/home/admin_home.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(CreateForm());
-}
+
 
 List<Campo> formFields = [];
 TextEditingController titulocontroller = TextEditingController();
@@ -15,17 +15,14 @@ TextEditingController optionscontroller = TextEditingController();
 const List<String> list = ['Texto', 'Desplegable'];
 
 class CreateForm extends StatelessWidget {
-   String dropdownValue = list.first;
+  String dropdownValue = list.first;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Nuevo formulario')),
-        body: TextFieldManager(),
-      ),
-    );
+    return TextFieldManager();
   }
 }
+
 
 class TextFieldManager extends StatefulWidget {
   @override
@@ -37,106 +34,116 @@ class _TextFieldManagerState extends State<TextFieldManager> {
 String dropdownValue = list.first;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: titulocontroller,
-          decoration: InputDecoration(hintText: 'Título'),
-        ),
-        TextField(
-          controller: descriptioncontroller,
-          decoration: InputDecoration(hintText: 'Descripción'),
-        ),
-        if (formFields.isNotEmpty)
-          ...formFields.map((campo) => buildCampoWidget(campo)).toList(),
-        Row(
-          children: [
-            Text('Añade campo'),
-            SizedBox(width: 10),
-            Flexible(
-              child: TextField(
-                controller: textfieldcontroller,
-                decoration: InputDecoration(helperText: 'Nombre del campo'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Nuevo formulario', style: tituloStyle)
+      ),
+      body: SafeArea(
+        child: Column(
+        children: [
+          TextField(
+            controller: titulocontroller,
+            decoration: InputDecoration(hintText: 'Título'),
+          ),
+          TextField(
+            controller: descriptioncontroller,
+            decoration: InputDecoration(hintText: 'Descripción'),
+          ),
+          if (formFields.isNotEmpty)
+            ...formFields.map((campo) => buildCampoWidget(campo)).toList(),
+          Row(
+            children: [
+              Text('Añade campo'),
+              SizedBox(width: 10),
+              Flexible(
+                child: TextField(
+                  controller: textfieldcontroller,
+                  decoration: InputDecoration(helperText: 'Nombre del campo'),
+                ),
               ),
-            ),
-            DropdownButton(
-              value: dropdownValue,
-              icon: const Icon(Icons.arrow_downward),
-              elevation: 16,
-              style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),  
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
-              items: list.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+              DropdownButton(
+                value: dropdownValue,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Colors.deepPurple),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
+                ),  
+                onChanged: (String? value) {
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
+                items: list.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              ElevatedButton(
+                onPressed: (){
+                  buildForm(dropdownValue);
+                }, 
+                child: Text('Añadir'),
+              ),
+            ],
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              var authRes = await enviarDatosAlFormulario(
+                  titulocontroller.text, descriptioncontroller.text, formFields);
+              if (authRes == false) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Error'),
+                      content: Text('Formulario no se ha guardado'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Aceptar'),
+                        ),
+                      ],
+                    );
+                  },
                 );
-              }).toList(),
+              } else{
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Operación Exitosa'),
+                      content: Text('Formulario guardado correctamente'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => AdminHome()),
+                            );
+                          },
+                          child: Text('Aceptar'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            }, 
+            child: Text('Guardar')
+          ),
+        ],
             ),
-            ElevatedButton(
-              onPressed: (){
-                buildForm(dropdownValue);
-              }, 
-              child: Text('Añadir'),
-            ),
-          ],
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            var authRes = await enviarDatosAlFormulario(
-                titulocontroller.text, descriptioncontroller.text, formFields);
-            if (authRes == false) {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Error'),
-                    content: Text('Formulario no se ha guardado'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Aceptar'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else{
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Operación Exitosa'),
-                    content: Text('Formulario guardado correctamente'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => FormList('')),
-                          );
-                        },
-                        child: Text('Aceptar'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
-          }, 
-          child: Text('Guardar')
-        ),
-      ],
+      )
     );
+    
+    
   }
   
   void buildForm(String dropdownValue) {

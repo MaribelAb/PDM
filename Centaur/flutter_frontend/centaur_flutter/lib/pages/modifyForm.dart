@@ -1,5 +1,6 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/formulario_model.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -19,7 +20,7 @@ class _EditFormPageState extends State<EditFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Editar Formulario')),
+      appBar: AppBar(title: Text('Editar Formulario', style: tituloStyle)),
       body: Column(
         children: [
           Expanded(

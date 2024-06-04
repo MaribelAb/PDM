@@ -2,6 +2,7 @@ import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:centaur_flutter/pages/calendar.dart';
 import 'package:centaur_flutter/pages/home/admin_home.dart';
+import 'package:centaur_flutter/pages/home/client_home.dart';
 //import 'package:centaur_flutter/navigation_service.dart';
 //import 'package:centaur_flutter/pages/form.dart';
 //import 'package:centaur_flutter/pages/home/home_agente.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
       create: (context) { 
         return UserCubit(User());
@@ -39,6 +41,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.amber,
         ),
         home: IndexPage()
+        /*MediaQuery.of(context).size.width <= 640
+        ? IndexPage()
+        : AdminHome() */
         //home: AdminHome()
         //home: Calendar(),
       ),

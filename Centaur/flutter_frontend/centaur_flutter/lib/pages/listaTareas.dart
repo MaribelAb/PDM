@@ -3,6 +3,8 @@ import 'package:centaur_flutter/models/tarea_model.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:centaur_flutter/pages/rellenarForm.dart';
+import 'package:centaur_flutter/pages/tareaView.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 //import 'tu_archivo.dart'; // Reemplaza "tu_archivo.dart" con el nombre de tu archivo que contiene la función getTickets
@@ -42,40 +44,42 @@ class _ListaTareasState extends State<ListaTareas> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Lista de Tareas'),
+      
+      body: Column(
+        children: [
+          Center(child: Text('Tareas', style: tituloStyle,)),
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _tareas.isEmpty
+                  ? Column(
+                    children: [
+                      Center(child: Text('No hay Tareas disponibles')),
+                      
+                    ],
+                  )
+                  : Expanded(
+                    child: ListView.builder(
+                        itemCount: _tareas.length,
+                        itemBuilder: (context, index) {
+                          Tarea tarea = _tareas[index];
+                          return ListTile(
+                            title: Text(tarea.titulo),
+                            subtitle: Text(tarea.descripcion),
+                            trailing: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => TareaView(tarea: tarea)),
+                                      );
+                              },
+                              child: Text('Ver Tarea'),
+                            ),
+                          );
+                        },
+                      ),
+                  ),
+        ],
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _tareas.isEmpty
-              ? Column(
-                children: [
-                  Center(child: Text('No hay Tareas disponibles')),
-                  
-                ],
-              )
-              : ListView.builder(
-                  itemCount: _tareas.length,
-                  itemBuilder: (context, index) {
-                    Tarea tarea = _tareas[index];
-                    return ListTile(
-                      leading: ElevatedButton(
-                        onPressed: () {
-                           
-                        },
-                        child: Text('Editar'),
-                      ),
-                      title: Text(tarea.titulo),
-                      subtitle: Text(tarea.descripcion),
-                      trailing: ElevatedButton(
-                        onPressed: () {
-                          
-                        },
-                        child: Text('Ver Tarea'),
-                      ),
-                    );
-                  },
-                ),
     );
   }
 }

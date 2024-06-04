@@ -27,6 +27,9 @@ class _SignUpClientState extends State<SignUpClient> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Registro cliente', style: tituloStyle,),
+      ),
       backgroundColor: bgColor,
       body: ListView(
         padding: EdgeInsets.symmetric(

@@ -28,6 +28,9 @@ class _SignUpAgentState extends State<SignUpAgent> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
+      appBar: AppBar(
+        title: Text('Registro Agentes', style: tituloStyle,),
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(
           horizontal: defaultMargin,

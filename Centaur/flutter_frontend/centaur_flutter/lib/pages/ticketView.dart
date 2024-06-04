@@ -2,7 +2,11 @@ import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/ticket_model.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/pages/home/admin_home.dart';
+import 'package:centaur_flutter/pages/home/agent_home.dart';
+import 'package:centaur_flutter/pages/home/client_home.dart';
 import 'package:centaur_flutter/pages/ticketList.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,13 +71,15 @@ class _TicketViewPageState extends State<TicketViewPage> {
     
   }
 
-  
+  bool cliente = false;
 
   @override
   Widget build(BuildContext context) {
     User user = context.read<UserCubit>().state;
+    if(user.groups!.contains('Client'))
+      cliente = true;
     return Scaffold(
-      appBar: AppBar(title: Text('Ticket Details')),
+      appBar: AppBar(title: Text(ticket.titulo.toString(), style: tituloStyle)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -183,12 +189,23 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           actions: [
                             ElevatedButton(
                               onPressed: (){
-                                Navigator.push(
+                                if (user.groups!.contains('Agent')){
+                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => TicketList(misTickets: misTickets,)
+                                    builder: (context) => AgentHome()
                                   ),
                                 );
+                                }
+                                else{
+                                  Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminHome()
+                                  ),
+                                );
+                                }
+                                
                               }, 
                               child: Text('Aceptar'),
                             )
@@ -217,7 +234,56 @@ class _TicketViewPageState extends State<TicketViewPage> {
                 }
               },
               child: Text('Modificar'),
-            )
+            ),
+            if(user.groups!.contains('Client'))
+            ElevatedButton(
+              onPressed: (){
+                showDialog(
+                    context: context, 
+                    builder: (context){
+                        return AlertDialog(
+                          title: Text('¿Seguro?'),
+                          content: Text('Este ticket se va a marcar como cerrado'),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: (){
+                                showDialog(
+                                  context: context, 
+                                  builder: (context){
+                                      return AlertDialog(
+                                        title: Text('Exito'),
+                                        content: Text('Ticket marcado como cerrado'),
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: (){
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => ClientHome()
+                                                ),
+                                              );
+                                            }, 
+                                            child: Text('Aceptar'),
+                                          )
+                                        ],
+                                      );
+                                    }
+                                );
+                              }, 
+                              child: Text('Sí, marcar como cerrado'),
+                            ),
+                            ElevatedButton(
+                              onPressed: (){
+                                Navigator.pop(context);
+                              }, 
+                              child: Text('No marcar'))
+                          ],
+                        );
+                      }
+                  );
+              },
+              child: Text('Marcar como cerrado')
+            ),
           ],
         ),
       ),

@@ -27,6 +27,10 @@ TextStyle greyTextStyle = GoogleFonts.juliusSansOne(
   color: kGreyColor,
 );
 
+TextStyle titulo = GoogleFonts.juliusSansOne(
+  color: kGreyColor,
+);
+
 // FONT WEIGHTS
 FontWeight thin = FontWeight.w100;
 FontWeight extraLight = FontWeight.w200;
@@ -43,4 +47,30 @@ final ThemeData myTheme = ThemeData(
   primaryColor: Colors.amber,
   fontFamily: 'Roboto', // Example font family
   
+);
+
+final TextStyle tituloStyle = GoogleFonts.juliusSansOne(
+  fontSize: 32.0,
+  color: Colors.black,
+  fontWeight: bold,
+);
+
+final TextStyle defaultStyle = GoogleFonts.roboto(
+  fontSize: 16.0,
+  color: Colors.black,
+);
+
+final TextStyle greetingStyle = GoogleFonts.juliusSansOne(
+  fontSize: 18.0,
+  color: Colors.black,
+);
+
+final TextStyle subtituloStyle = GoogleFonts.archivoNarrow(
+  fontSize: 24.0,
+  color: Colors.black,
+);
+
+final TextStyle normalStyle = GoogleFonts.sourceSans3(
+  fontSize: 18.0,
+  color: Colors.black,
 );

@@ -9,6 +9,7 @@ import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
 import 'package:centaur_flutter/pages/create_form.dart';
 import 'package:centaur_flutter/pages/modifyForm.dart';
+import 'package:centaur_flutter/theme.dart';
 //import 'package:centaur_flutter/pages/form.dart';
 //import 'package:centaur_flutter/pages/tickets.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +22,12 @@ class RellenarForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const appTitle = 'Formulario';
+    const appTitle = 'Rellene el formulario';
     return MaterialApp(
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text(appTitle),
+          title: Text(appTitle, style: tituloStyle),
         ),
         body: RellenarFormPage(form: Formulario(id:0,titulo: '', descripcion: '', campos: [], categoria: '', oculto: true)),
       ),
@@ -79,7 +80,11 @@ class RellenarFormPageState extends State<RellenarFormPage> {
     }
     String buttonText = 'Modificar';
     if(cliente) buttonText = 'Enviar';  
-    return Form(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(formulario.titulo)
+      ),
+      body: Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +169,10 @@ class RellenarFormPageState extends State<RellenarFormPage> {
           ),
         ],
       ),
+    )
     );
+    
+    
   }
 
   List<Widget> _buildCamposWidgets() {

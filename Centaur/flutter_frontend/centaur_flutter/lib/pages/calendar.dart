@@ -3,6 +3,7 @@
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,10 +19,8 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoApp(
-      theme: CupertinoThemeData(brightness: Brightness.light),
-      home: DatePickerExample(),
-    );
+    return DatePickerExample();
+    
   }
 }
 
@@ -162,14 +161,11 @@ Widget build(BuildContext context) {
   User user = context.read<UserCubit>().state;  
   String? crea = user.username;
   return CupertinoPageScaffold(
-    navigationBar: const CupertinoNavigationBar(
-      middle: Text('CupertinoDatePicker Sample'),
+    navigationBar: CupertinoNavigationBar(
+      middle: Text('Crear Tarea', style: tituloStyle,),
     ),
     child: DefaultTextStyle(
-      style: TextStyle(
-        color: CupertinoColors.label.resolveFrom(context),
-        fontSize: 22.0,
-      ),
+      style: defaultStyle,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +321,7 @@ Widget build(BuildContext context) {
                               _insertEvent();
                               Navigator.pop(context); // Close the dialog after syncing
                             },
-                            child: Text('Sincronizar'),
+                            child: Text('Sincronizar', style: normalStyle),
                           ),
                         ],
                       );
@@ -336,14 +332,14 @@ Widget build(BuildContext context) {
                     context: context,
                     builder: (context) {
                       return CupertinoAlertDialog(
-                        title: Text('Error'),
-                        content: Text('La tarea no se ha creado'),
+                        title: Text('Error', style: normalStyle),
+                        content: Text('La tarea no se ha creado', style: normalStyle),
                         actions: [
                           CupertinoDialogAction(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text('Aceptar'),
+                            child: Text('Aceptar', style: normalStyle),
                           ),
                         ],
                       );
@@ -351,7 +347,7 @@ Widget build(BuildContext context) {
                   );
                 }
               },
-              child: const Text('Crear'),
+              child: Text('Crear', style: normalStyle),
             ),
           ],
         ),

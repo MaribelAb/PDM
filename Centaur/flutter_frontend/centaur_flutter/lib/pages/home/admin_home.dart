@@ -6,11 +6,13 @@ import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/pages/calendar.dart';
 import 'package:centaur_flutter/pages/create_form.dart';
 import 'package:centaur_flutter/pages/formList.dart';
+import 'package:centaur_flutter/pages/inicioAdmin.dart';
 import 'package:centaur_flutter/pages/listaTareas.dart';
 import 'package:centaur_flutter/pages/logout_page.dart';
 import 'package:centaur_flutter/pages/ticketList.dart';
 import 'package:centaur_flutter/pages/view_bar_chart.dart';
 import 'package:centaur_flutter/pages/view_line_chart.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,6 +30,7 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome> {
   int _selectedIndex = 0;
   PageController _pageController = PageController();
+   PageController _navController = PageController();
   List<String?>? _agentes = [];
   List<String?>? _clientes = [];
   List<User?>? _usuarios = [];
@@ -44,23 +47,11 @@ class _AdminHomeState extends State<AdminHome> {
   @override
   void dispose() {
     _pageController.dispose();
+    _navController.dispose();
     super.dispose();
   }
 
-  Future<void> _getAllUsers() async {
-    try {
-      List<User?>? usuarios = await getAllUsers();
-      setState(() {
-        _usuarios = usuarios;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error al cargar los usuarios (codigo): $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+  
 
   Future<void> _getAgentes() async {
     try {
@@ -113,10 +104,9 @@ class _AdminHomeState extends State<AdminHome> {
     _getAgentes();
     _getClientes();
     _loadTickets();
-    _getAllUsers();
   }
 
-
+  
 
   @override
   Widget build(BuildContext context) {
@@ -148,47 +138,24 @@ class _AdminHomeState extends State<AdminHome> {
     ];
 
     List<Widget> widgetOptions = <Widget>[
+      //INICIO
       Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Center(child: Text('Usuarios'),),
           Expanded(
             child: Container(
               margin: EdgeInsets.all(1.0),
               decoration: BoxDecoration(
                 border: Border.all(width: 1),
               ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: [
-                    DataColumn(label: Text('Nombre de usuario')),
-                    DataColumn(label: Text('Email')),
-                    DataColumn(label: Text('Grupo')),
-                    DataColumn(label: Text('Acción'))
-                  ], 
-                  rows: _usuarios!.map((usuario){
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(usuario?.username ?? 'No Title')),
-                        DataCell(Text(usuario?.email ?? 'N/A')),
-                        DataCell(Text(usuario?.groups.toString() ?? 'N/A')),
-                        DataCell(
-                          ElevatedButton(
-                          onPressed: (){
-
-                          }, 
-                          child: Text('Administrar')
-                          )
-                        )
-                      ]
-                    );
-                  }).toList(),
-                ),
+              child: SizedBox(
+                height: 200,
+                child: AdminIni()
               )
-            )
+            ),
           ),
           
-        ],
+        ]
       ),
       
       //MIS TICKETS
@@ -234,13 +201,13 @@ class _AdminHomeState extends State<AdminHome> {
                 MaterialPageRoute(builder: (context) => CreateForm()),
               );
             },  
-            child: Text('Crear')
+            child: Text('Crear', style: normalStyle,)
           ),
           SizedBox(height:10),
         ]
     ),
       
-      Column(//INICIO
+      Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Row(
@@ -335,29 +302,29 @@ class _AdminHomeState extends State<AdminHome> {
                   ),
                   child: Column(
                     children: [
-                      Center(child: Text('Tickets')),
+                      Center(child: Text('Tickets',)),
                       Row(
                         children: [
-                          Text('Número de tickets creados: '),
-                          Text(_tickets.length.toString())
+                          Text('Número de tickets creados: ',),
+                          Text(_tickets.length.toString(),)
                         ],
                       ),
                       Row(
                         children: [
-                          Text('Número de tickets resueltos: '),
-                          Text(_tickets.where((ticket) => ticket.estado == 'cerrado').length.toString())
+                          Text('Número de tickets resueltos: ',),
+                          Text(_tickets.where((ticket) => ticket.estado == 'cerrado').length.toString(),)
                         ],
                       ),
                       Row(
                         children: [
-                          Text('Número de tickets en curso: '),
-                          Text(_tickets.where((ticket) => ticket.estado == 'en_curso').length.toString())
+                          Text('Número de tickets en curso: ',),
+                          Text(_tickets.where((ticket) => ticket.estado == 'en_curso').length.toString(),)
                         ],
                       ),
                       Row(
                         children: [
-                          Text('Número de tickets abiertos: '),
-                          Text(_tickets.where((ticket) => ticket.estado == 'abierto').length.toString())
+                          Text('Número de tickets abiertos: ',),
+                          Text(_tickets.where((ticket) => ticket.estado == 'abierto').length.toString(),)
                         ],
                       )
                     ],
@@ -392,7 +359,7 @@ class _AdminHomeState extends State<AdminHome> {
                 MaterialPageRoute(builder: (context) => Calendar()),
               );
             },  
-            child: Text('Crear')
+            child: Text('Crear',style: normalStyle)
           ),
           SizedBox(height:10),
         ]
@@ -427,7 +394,7 @@ class _AdminHomeState extends State<AdminHome> {
               child: Text(
                 '¡Bienvenido ${user.username}!',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20),
+                style: greetingStyle,
               ),
             ),
           ],
@@ -435,6 +402,7 @@ class _AdminHomeState extends State<AdminHome> {
       ),
       drawer: MediaQuery.of(context).size.width <= 640
           ? Drawer(
+            backgroundColor: HexColor('#333333'),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: destinations.map((destination) {
@@ -442,14 +410,14 @@ class _AdminHomeState extends State<AdminHome> {
                   return ListTile(
                     leading: IconTheme(
                       data: IconThemeData(
-                        color: _selectedIndex == index ? Colors.blue : Colors.amber,
+                        color: _selectedIndex == index ? HexColor('84b39d') : Colors.amber,
                       ),
                       child: destination.icon,
                     ),
                     title: Text(
                       (destination.label as Text).data!,
                       style: TextStyle(
-                        color: _selectedIndex == index ? Colors.blue : Colors.amber,
+                        color: _selectedIndex == index ? HexColor('84b39d') : Colors.amber,
                       ),
                     ),
                     selected: _selectedIndex == index,
@@ -470,9 +438,10 @@ class _AdminHomeState extends State<AdminHome> {
           if (MediaQuery.of(context).size.width > 640)
             Container(
               child: NavigationRail(
+                //backgroundColor: Colors.amber,
                     elevation: 5,
                     labelType: NavigationRailLabelType.all,
-                    selectedLabelTextStyle: const TextStyle(color: Colors.blue),
+                    selectedLabelTextStyle: TextStyle(color: Colors.blue),
                     unselectedLabelTextStyle: const TextStyle(color: Colors.amber),
                     onDestinationSelected: (selectedIndex) {
                       setState(() {
@@ -491,4 +460,15 @@ class _AdminHomeState extends State<AdminHome> {
       ),
     );
   }
+}
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }

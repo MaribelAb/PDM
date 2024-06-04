@@ -45,6 +45,9 @@ void initState() {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
+      appBar: AppBar(
+        title: Text('¡Hola cliente!', style: tituloStyle,),
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(
           horizontal: defaultMargin,
@@ -59,7 +62,7 @@ void initState() {
            
           ),
           SizedBox(
-            height: 100,
+            height: 50,
           ),
           CustomField(
             controller: usernameController,

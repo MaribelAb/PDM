@@ -1,11 +1,12 @@
 import 'package:centaur_flutter/constants.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
-import 'package:centaur_flutter/navigation_service.dart';
+
 import 'package:centaur_flutter/pages/formList.dart';
 import 'package:centaur_flutter/pages/inicioCli.dart';
 import 'package:centaur_flutter/pages/logout_page.dart';
 import 'package:centaur_flutter/pages/ticketList.dart';
+import 'package:centaur_flutter/theme.dart';
 //import 'package:centaur_flutter/navigation_service.dart';
 //import 'package:centaur_flutter/pages/form.dart';
 //import 'package:centaur_flutter/pages/tickets.dart';
@@ -149,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text(
                   '¡Bienvenido ${user.username}!',
                   textAlign: TextAlign.center, // Center-align the text
-                  style: TextStyle(fontSize: 20), // Adjust the font size as needed
+                  style: greetingStyle, // Adjust the font size as needed
                 ),
               ),
             ],
@@ -158,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: MediaQuery.of(context).size.width <= 640
       ? BottomNavigationBar(
+
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -179,8 +181,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.blue,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.amber,
+        //backgroundColor: HexColor('38425f'),
         onTap: _onItemTapped,  
       ): null,
       body: Row(
@@ -235,3 +238,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}

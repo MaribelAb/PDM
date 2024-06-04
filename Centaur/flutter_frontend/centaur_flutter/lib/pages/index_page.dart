@@ -1,5 +1,6 @@
 import 'package:centaur_flutter/pages/login_agente.dart';
 import 'package:centaur_flutter/pages/login_cliente.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 
 /// Flutter code sample for [ElevatedButton].
@@ -31,38 +32,55 @@ class IndexPage extends StatelessWidget {
               ),
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Text("¿Quién eres?"),
+              child: Text("¿Quién eres?", style: tituloStyle,),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.amber,padding: EdgeInsets.only(top: 5,bottom: 5)),
-                  child: Text("Cliente",style: TextStyle(color: Colors.black),),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context){
-                        return SignInClient();
-                      }
-                    )
-                    );
-                  },
+                SizedBox(
+                  width: 200, // Adjust the width as needed
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      padding: EdgeInsets.only(top: 5, bottom: 5, right: 20, left: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                    child: Text("Cliente", style: subtituloStyle),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return SignInClient();
+                        },
+                      ));
+                    },
+                  ),
                 ),
-                
-                
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.amber,padding: EdgeInsets.only(top: 5,bottom: 5)),
-                  child: Text("Administración",style: TextStyle(color: Colors.black),),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context){
-                        return SignInAgent();
-                      }
-                    )
-                    );
-                  },
+
+                SizedBox(
+                  width: 200, // Same width as above
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      padding: EdgeInsets.only(top: 5, bottom: 5, right: 20, left: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                    child: Text("Administración", style: subtituloStyle),
+                    
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return SignInAgent();
+                        },
+                      ));
+                    },
+                  ),
                 ),
+
                 
               ],
             ),

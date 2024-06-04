@@ -318,6 +318,7 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Cam
   final Map <String, dynamic> datos={
     'titulo': titulo,
     'descripcion': descripcion,
+    'oculto': true,
     'campos': [],
   };
   //print(campos);
