@@ -1,7 +1,5 @@
 @echo off
 
-REM activate vistual environment
-myenv\Scripts\activate
 cd Centaur\flutter_frontend\centaur_flutter
 REM Check for connected devices
 set "flutter_command=flutter run"
