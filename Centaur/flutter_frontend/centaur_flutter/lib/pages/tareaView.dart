@@ -44,7 +44,7 @@ class _TareaViewState extends State<TareaView> {
   Widget build(BuildContext context) {
     User user = context.read<UserCubit>().state;
     return Scaffold(
-      appBar: AppBar(title: Text(tarea.titulo, style: tituloStyle)),
+      appBar: AppBar(title: Text(tarea.titulo, style: tituloStyle(context))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -59,8 +59,11 @@ class _TareaViewState extends State<TareaView> {
             Text('Fecha de fin: ${tarea.fecha_fin.toString()}'),
                
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
               onPressed: () async {
-                // Call the function to modify the ticket with the selected values
+               
                 var resp = true;
 
                 if (resp){
@@ -72,6 +75,9 @@ class _TareaViewState extends State<TareaView> {
                           content: Text('Tarea modificada correctamente'),
                           actions: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 if (user.groups!.contains('Agent')){
                                   Navigator.push(
@@ -106,6 +112,9 @@ class _TareaViewState extends State<TareaView> {
                           content: Text('No se ha podido modificar la tarea'),
                           actions: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

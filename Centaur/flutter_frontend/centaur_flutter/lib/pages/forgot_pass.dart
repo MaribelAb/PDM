@@ -29,6 +29,7 @@ class ForgotPassPage extends StatelessWidget {
             CustomField(
               iconUrl: 'assets/icon_email.png',
               hint: 'Email',
+              passfield: false,
             ),
             CustomTextButton(
               title: 'Reset Password',

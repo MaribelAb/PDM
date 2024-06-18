@@ -37,38 +37,84 @@ class _AdminIniState extends State<AdminIni>{
 
   @override
   Widget build(BuildContext context) {
+         ScrollController _horizontalScrollController = ScrollController();
     return Column(
         children: [
-          Center(child: Text('Usuarios', style: tituloStyle)),
-          Expanded(
-            child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: [
-                    DataColumn(label: Text('Nombre de usuario')),
-                    DataColumn(label: Text('Email')),
-                    DataColumn(label: Text('Grupo')),
-                    DataColumn(label: Text('Acción'))
-                  ], 
-                  rows: _usuarios!.map((usuario){
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(usuario?.username ?? 'No Title')),
-                        DataCell(Text(usuario?.email ?? 'N/A')),
-                        DataCell(Text(usuario?.groups.toString() ?? 'N/A')),
-                        DataCell(
-                          ElevatedButton(
-                          onPressed: (){
-
-                          }, 
-                          child: Text('Administrar')
-                          )
-                        )
-                      ]
-                    );
-                  }).toList(),
-                ),
+          Center(child: Text('Usuarios', style: tituloStyle(context))),
+          FocusableActionDetector(
+            focusNode: FocusNode(),
+            child: Expanded(
+              child:  MediaQuery.of(context).size.width <= 640 
+              ? Scrollbar(
+                controller: _horizontalScrollController, // <---- Here, the controller
+                thumbVisibility: true,
+                trackVisibility: true, 
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _horizontalScrollController,
+                    child: DataTable(
+                      columns: [
+                        DataColumn(label: Text('Nombre de usuario')),
+                        DataColumn(label: Text('Email')),
+                        DataColumn(label: Text('Grupo')),
+                        DataColumn(label: Text('Acción'))
+                      ], 
+                      rows: _usuarios!.map((usuario){
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(usuario?.username ?? 'No Title')),
+                            DataCell(Text(usuario?.email ?? 'N/A')),
+                            DataCell(Text(usuario?.groups.toString() ?? 'N/A')),
+                            DataCell(
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                ),
+                                onPressed: (){
+                  
+                                }, 
+                                child: Text('Administrar ${usuario?.username ?? 'Usuario'}'),
+                              )
+                            )
+                          ]
+                        );
+                      }).toList(),
+                    ),
+                  ),
               )
+              
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: [
+                      DataColumn(label: Text('Nombre de usuario')),
+                      DataColumn(label: Text('Email')),
+                      DataColumn(label: Text('Grupo')),
+                      DataColumn(label: Text('Acción'))
+                    ], 
+                    rows: _usuarios!.map((usuario){
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(usuario?.username ?? 'No Title')),
+                          DataCell(Text(usuario?.email ?? 'N/A')),
+                          DataCell(Text(usuario?.groups.toString() ?? 'N/A')),
+                          DataCell(
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                              ),
+                              onPressed: (){
+              
+                              }, 
+                              child: Text('Administrar')
+                            )
+                          )
+                        ]
+                      );
+                    }).toList(),
+                  ),
+                )
+            ),
           ),
           
         ],

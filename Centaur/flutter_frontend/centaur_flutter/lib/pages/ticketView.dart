@@ -79,34 +79,58 @@ class _TicketViewPageState extends State<TicketViewPage> {
     if(user.groups!.contains('Client'))
       cliente = true;
     return Scaffold(
-      appBar: AppBar(title: Text(ticket.titulo.toString(), style: tituloStyle)),
+      appBar: AppBar(title: Text(ticket.titulo.toString(), style: tituloStyle(context))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Título: ${ticket.titulo}', style: TextStyle(fontSize: 20)),
+            FocusableActionDetector(
+              focusNode: FocusNode(),
+              child: Text('Título: ${ticket.titulo}', style: TextStyle(fontSize: 20)),
+              
+            ),
             SizedBox(height: 8),
-            Text('Descripción: ${ticket.descripcion}'),
+            FocusableActionDetector(
+              focusNode: FocusNode(),
+              child: Text('Descripción: ${ticket.descripcion}'),
+              
+            ),
             SizedBox(height: 8),
             if (ticket.contenido != null && ticket.contenido!.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Contenido:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  FocusableActionDetector(
+                    focusNode: FocusNode(),
+                    child: Text('Contenido:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    
+                  ),
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: ticket.contenido!.length,
                     itemBuilder: (context, index) {
                       final contenido = ticket.contenido![index];
-                      return Text('${contenido.nombre}: ${contenido.valor}');
+                      return FocusableActionDetector(
+                        focusNode: FocusNode(),
+                        child: Text('${contenido.nombre}: ${contenido.valor}'),
+                        
+                      );
                     },
                   ),
-                ]
+                ],
               ),
-            Text('Solicitante: ${ticket.solicitante}'),
+            FocusableActionDetector(
+              focusNode: FocusNode(),
+              child: Text('Solicitante: ${ticket.solicitante}'),
+              
+            ),
             SizedBox(height: 8),
-            Text('Responsable: ${ticket.asignee}'),
+            FocusableActionDetector(
+              focusNode: FocusNode(),
+              child: Text('Responsable: ${ticket.asignee}'),
+              
+            ),
             if(user.groups!.contains('Client') == false)            
             DropdownButtonFormField<String>(
               value: asignee,
@@ -167,6 +191,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
             SizedBox(height: 8),
             if(user.groups!.contains('Client') == false)      
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
               onPressed: () async {
                 // Call the function to modify the ticket with the selected values
                 var resp = await modifyTicket(
@@ -188,6 +215,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           content: Text('Ticket modificado correctamente'),
                           actions: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 if (user.groups!.contains('Agent')){
                                   Navigator.push(
@@ -222,6 +252,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           content: Text('No se ha podido modificar el ticket'),
                           actions: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 
@@ -237,6 +270,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
             ),
             if(user.groups!.contains('Client'))
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
               onPressed: (){
                 showDialog(
                     context: context, 
@@ -246,6 +282,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           content: Text('Este ticket se va a marcar como cerrado'),
                           actions: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 showDialog(
                                   context: context, 
@@ -255,6 +294,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
                                         content: Text('Ticket marcado como cerrado'),
                                         actions: [
                                           ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                                             onPressed: (){
                                               Navigator.push(
                                                 context,
@@ -273,6 +315,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
                               child: Text('Sí, marcar como cerrado'),
                             ),
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

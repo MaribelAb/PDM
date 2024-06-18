@@ -28,6 +28,7 @@ class CustomTextButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),
           ),
+
         ),
         child: Text(
           title,

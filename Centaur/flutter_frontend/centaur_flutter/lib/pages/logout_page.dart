@@ -2,7 +2,10 @@ import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/pages/index_page.dart';
 import 'package:centaur_flutter/pages/login_agente.dart';
 import 'package:centaur_flutter/pages/login_cliente.dart';
+import 'package:centaur_flutter/pages/themenot.dart';
+import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// Flutter code sample for [ElevatedButton].
 
@@ -15,6 +18,7 @@ class LogoutPage extends StatelessWidget {
 
   @override
 Widget build(BuildContext context) {
+  final themeNotifier = Provider.of<ThemeNotifier>(context);
   const String appTitle = 'Centaur: cerrar sesion';
   return Center( // Center the content vertically and horizontally
         child: Column(
@@ -24,17 +28,20 @@ Widget build(BuildContext context) {
             Container(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Image.asset("images/logo_claro.png"),
+                child: themeNotifier.isDarkTheme ? Image.asset('assets/images/logo_oscuro.png') : Image.asset('assets/images/logo_claro.png')
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Text("¿Quieres cerrar sesión?"),
+              child: Text("¿Quieres cerrar sesión?", style: subtituloStyle(context),),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amber,
-                padding: EdgeInsets.only(top: 5, bottom: 5),
+                padding: EdgeInsets.only(top: 5, bottom: 5, right: 20, left: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
               ),
               child: Text(
                 "Cerrar sesión",

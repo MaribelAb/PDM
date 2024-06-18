@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -43,34 +45,49 @@ FontWeight extraBold = FontWeight.w800;
 FontWeight black = FontWeight.w900;
 
 
+
 final ThemeData myTheme = ThemeData(
   primaryColor: Colors.amber,
   fontFamily: 'Roboto', // Example font family
   
 );
 
-final TextStyle tituloStyle = GoogleFonts.juliusSansOne(
-  fontSize: 32.0,
-  color: Colors.black,
-  fontWeight: bold,
-);
+TextStyle tituloStyle(BuildContext context) {
+  return GoogleFonts.juliusSansOne(
+    fontSize: 32.0,
+    color: getTextColor(context),
+    fontWeight: FontWeight.bold,
+  );
+}
 
-final TextStyle defaultStyle = GoogleFonts.roboto(
-  fontSize: 16.0,
-  color: Colors.black,
-);
+TextStyle defaultStyle(BuildContext context) {
+  return GoogleFonts.roboto(
+    fontSize: 16.0,
+    color: getTextColor(context),
+  );
+}
 
-final TextStyle greetingStyle = GoogleFonts.juliusSansOne(
-  fontSize: 18.0,
-  color: Colors.black,
-);
+TextStyle greetingStyle(BuildContext context) {
+  return GoogleFonts.juliusSansOne(
+    fontSize: 18.0,
+    color: getTextColor(context),
+  );
+}
 
-final TextStyle subtituloStyle = GoogleFonts.archivoNarrow(
-  fontSize: 24.0,
-  color: Colors.black,
-);
+TextStyle subtituloStyle(BuildContext context) {
+  return GoogleFonts.archivoNarrow(
+    fontSize: 24.0,
+    color: getTextColor(context),
+  );
+}
 
-final TextStyle normalStyle = GoogleFonts.sourceSans3(
-  fontSize: 18.0,
-  color: Colors.black,
-);
+TextStyle normalStyle(BuildContext context) {
+  return GoogleFonts.sourceSans3(
+    fontSize: 18.0,
+    color: getTextColor(context),
+  );
+}
+
+Color getTextColor(BuildContext context) {
+  return Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black;
+}

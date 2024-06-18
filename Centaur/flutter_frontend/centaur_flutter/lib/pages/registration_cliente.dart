@@ -28,7 +28,7 @@ class _SignUpClientState extends State<SignUpClient> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registro cliente', style: tituloStyle,),
+        title: Text('Registro cliente', style: tituloStyle(context),),
       ),
       backgroundColor: bgColor,
       body: ListView(
@@ -54,23 +54,25 @@ class _SignUpClientState extends State<SignUpClient> {
             iconUrl: 'assets/icon_name.png',
             hint: 'Nombre de usuario',
             controller: usernameController,
+            passfield: false,
           ),
           CustomField(
             iconUrl: 'assets/icon_email.png',
             hint: 'Email',
             controller: emailController,
+            passfield: false,
           ),
           CustomField(
             iconUrl: 'assets/icon_password.png',
             hint: 'Contraseña',
             controller: passwordController,
-            obsecure: true,
+            passfield: true,
           ),
           CustomField(
             iconUrl: 'assets/icon_password.png',
             hint: 'Confirma contraseña',
             controller: confirmPasswdController,
-            obsecure: true,
+            passfield: true,
           ),
           CustomTextButton(
             title: 'Regístrate',

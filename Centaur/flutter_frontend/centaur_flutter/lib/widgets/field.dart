@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:centaur_flutter/theme.dart';
 
-class CustomField extends StatelessWidget {
+class CustomField extends StatefulWidget {
   final String iconUrl;
   final String hint;
-  TextEditingController ? controller;
-  final bool obsecure;
+  TextEditingController? controller;
+  bool obsecure;
+  final bool passfield;
 
   CustomField({
     this.controller,
     this.iconUrl = '',
     this.hint = '',
     this.obsecure = false,
+    required this.passfield,
   });
 
+  @override
+  _CustomFieldState createState() => _CustomFieldState();
+}
+
+class _CustomFieldState extends State<CustomField> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +30,7 @@ class CustomField extends StatelessWidget {
       padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
         border: Border.all(
-          color: kBlackColor,
+          color: Colors.black,
         ),
         borderRadius: BorderRadius.circular(6),
       ),
@@ -33,32 +40,46 @@ class CustomField extends StatelessWidget {
             height: 26,
             width: 26,
             margin: EdgeInsets.only(right: 18),
-            //decoration: BoxDecoration(
-            //  image: DecorationImage(
-            //    fit: BoxFit.cover,
-            //    image: AssetImage(
-            //      iconUrl,
-            //    ),
-            //  ),
-            //),
-          ),
-          Expanded(
-            child: TextFormField(
-              obscureText: obsecure,
-              controller: controller,
-              decoration: InputDecoration.collapsed(
-                hintText: hint,
-                hintStyle: greyTextStyle.copyWith(
-                  fontSize: 18,
-                  //fontWeight: semiBold,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage(
+                  widget.iconUrl,
                 ),
-              ),
-              style: blackTextStyle.copyWith(
-                fontSize: 18,
-                fontWeight: semiBold,
               ),
             ),
           ),
+          Expanded(
+            child: TextFormField(
+              obscureText: widget.passfield ? widget.obsecure : false,
+              controller: widget.controller,
+              decoration: InputDecoration.collapsed(
+                hintText: widget.hint,
+                hintStyle: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+          if (widget.passfield)
+            IconButton(
+              iconSize: 24,
+              icon: Semantics(
+                label: 'Botón para mostrar u ocultar contraseña',
+                child: Tooltip(
+                  message: widget.obsecure ? 'Mostrar contraseña' : 'Ocultar contraseña',
+                  child: Icon(widget.obsecure ? Icons.visibility_off : Icons.visibility)
+                )
+              ),
+              onPressed: () {
+                setState(() {
+                  widget.obsecure = !widget.obsecure;
+                });
+              },
+            ),
         ],
       ),
     );

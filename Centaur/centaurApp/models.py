@@ -90,7 +90,7 @@ class Ticket(models.Model):
     descripcion = models.CharField('Descripcion', max_length = 100)
     contenido = models.ManyToManyField(Contenido, blank=True)
     solicitante = models.CharField('Solicitante', max_length = 100, blank=True)
-    encargado = models.CharField('Encargado', max_length = 100, blank=True)
+    encargado = models.CharField('Encargado', max_length = 100, default='Sin asignar')
     prioridad = models.CharField(max_length=6, choices=PRIORIDADES, default=BAJA)
     estado = models.CharField(max_length=10, choices=ESTADO, default=ABIERTO)
    # encargado = models.ForeignKey(
@@ -170,5 +170,7 @@ class Tarea(models.Model):
     fecha_fin = models.DateField(blank=True, null=True)
     hora_ini = models.TimeField(blank=True, null=True)
     hora_fin = models.TimeField(blank=True, null=True)
+    def __str__(self):
+        return '{0}'.format(self.titulo)
 
     

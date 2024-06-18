@@ -86,106 +86,122 @@ class _FormListState extends State<FormList> {
 
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          Center(child: Text('Formularios', style: tituloStyle)),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SearchBar(
-              hintText: 'Introduce el término de búsqueda',
-              controller: search,
-              leading: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => FormSearch(clave: search.text)),
-                  );
-                },
+      body: FocusableActionDetector(
+        focusNode: FocusNode(),
+        child: Column(
+          children: [
+            Center(child: Text('Formularios', style: tituloStyle(context))),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SearchBar(
+                hintText: 'Introduce el término de búsqueda',
+                controller: search,
+                leading: IconButton(
+                  iconSize: 24,
+                  icon: Tooltip(child: Icon(Icons.search), message: 'Buscar formulario',),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FormSearch(clave: search.text)),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : Expanded(
-                  child: _formularios.isEmpty
-                      ? Center(child: Text('No hay formularios disponibles'))
-                      : ListView.builder(
-                          itemCount: _formularios.length,
-                          itemBuilder: (context, index) {
-                            Formulario formulario = _formularios[index];
-                            if (formulario.oculto) {
-                              estado = 'Este formulario está oculto';
-                            } else {
-                              estado = 'Este formulario está visible';
-                            }
-
-                            sub = cliente ? formulario.descripcion : estado;
-
-                            return ListTile(
-                              leading: Visibility(
-                                visible: !cliente,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    var resp = await editarVisibilidad(formulario);
-                                    if (resp) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text('Correcto'),
-                                            content: Text('Visibilidad cambiada de forma exitosa'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  setState(() {});
-                                                },
-                                                child: Text('Aceptar'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text('Error'),
-                                            content: Text('No se ha podido cambiar la visibilidad'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('Aceptar'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
-                                  child: Text(formulario.oculto ? 'Mostrar' : 'Ocultar'),
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : Expanded(
+                    child: _formularios.isEmpty
+                        ? Center(child: Text('No hay formularios disponibles'))
+                        : ListView.builder(
+                            itemCount: _formularios.length,
+                            itemBuilder: (context, index) {
+                              Formulario formulario = _formularios[index];
+                              if (formulario.oculto) {
+                                estado = 'Este formulario está oculto';
+                              } else {
+                                estado = 'Este formulario está visible';
+                              }
+        
+                              sub = cliente ? formulario.descripcion : estado;
+        
+                              return ListTile(
+                                leading: Visibility(
+                                  visible: !cliente,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                    ),
+                                    onPressed: () async {
+                                      var resp = await editarVisibilidad(formulario);
+                                      if (resp) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text('Correcto'),
+                                              content: Text('Visibilidad cambiada de forma exitosa'),
+                                              actions: [
+                                                TextButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {});
+                                                  },
+                                                  child: Text('Aceptar'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text('Error'),
+                                              content: Text('No se ha podido cambiar la visibilidad'),
+                                              actions: [
+                                                TextButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Aceptar'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                    child: Text(formulario.oculto ? 'Mostrar' : 'Ocultar'),
+                                  ),
                                 ),
-                              ),
-                              title: Text(formulario.titulo),
-                              subtitle: Text(sub),
-                              trailing: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => RellenarFormPage(form: formulario)),
-                                  );
-                                },
-                                child: Text('Ver Formulario'),
-                              ),
-                            );
-                          },
-                        ),
-                ),
-        ],
+                                title: Text(formulario.titulo),
+                                subtitle: Text(sub),
+                                trailing: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => RellenarFormPage(form: formulario)),
+                                    );
+                                  },
+                                  child: Text('Ver Formulario'),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+          ],
+        ),
       ),
     );
   }

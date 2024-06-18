@@ -27,7 +27,7 @@ class RellenarForm extends StatelessWidget {
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
-          title: Text(appTitle, style: tituloStyle),
+          title: Text(appTitle, style: tituloStyle(context)),
         ),
         body: RellenarFormPage(form: Formulario(id:0,titulo: '', descripcion: '', campos: [], categoria: '', oculto: true)),
       ),
@@ -113,6 +113,9 @@ class RellenarFormPageState extends State<RellenarFormPage> {
             padding: const EdgeInsets.symmetric(vertical: 16),
             
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
               onPressed: () async {
                 if(cliente){
                   var campoTexto = extractTextValues(textControllers);
@@ -127,6 +130,9 @@ class RellenarFormPageState extends State<RellenarFormPage> {
                           content: Text('Ticket enviado correctamente. Siga el estado del ticket en "Mis tickets".'),
                           actions: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 
@@ -145,6 +151,9 @@ class RellenarFormPageState extends State<RellenarFormPage> {
                           content: Text('No se ha podido crear el ticket'),
                           actions: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

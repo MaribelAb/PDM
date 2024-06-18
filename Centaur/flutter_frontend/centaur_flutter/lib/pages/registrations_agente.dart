@@ -29,7 +29,7 @@ class _SignUpAgentState extends State<SignUpAgent> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text('Registro Agentes', style: tituloStyle,),
+        title: Text('Registro Agentes', style: tituloStyle(context),),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(
@@ -54,23 +54,25 @@ class _SignUpAgentState extends State<SignUpAgent> {
             iconUrl: 'assets/icon_name.png',
             hint: 'Nombre de usuario',
             controller: usernameController,
+            passfield: false,
           ),
           CustomField(
             iconUrl: 'assets/icon_email.png',
             hint: 'Email',
             controller: emailController,
+            passfield: false,
           ),
           CustomField(
             iconUrl: 'assets/icon_password.png',
             hint: 'Contraseña',
             controller: passwordController,
-            obsecure: true,
+            passfield: true,
           ),
           CustomField(
             iconUrl: 'assets/icon_password.png',
             hint: 'Confirma contraseña',
             controller: confirmPasswdController,
-            obsecure: true,
+            passfield: true,
           ),
           CustomTextButton(
             title: 'Regístrate',

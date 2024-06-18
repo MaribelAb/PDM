@@ -46,7 +46,7 @@ void initState() {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text('¡Hola cliente!', style: tituloStyle,),
+        title: Text('¡Hola cliente!', style: tituloStyle(context),),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(
@@ -55,9 +55,8 @@ void initState() {
         children: [
         Container(
            //margin: EdgeInsets.only(top: 50),
-           child: Image.asset(
-             'images/logo_claro.png',
-           ),
+           child: Image.asset('assets/images/logo_claro.png'),
+
            height: 200
            
           ),
@@ -68,12 +67,13 @@ void initState() {
             controller: usernameController,
             iconUrl: 'assets/icon_email.png',
             hint: 'Nombre de usuario',
+            passfield: false,
           ),
           CustomField(
             controller: passwordController,
             iconUrl: 'assets/icon_password.png',
             hint: 'Contraseña',
-            obsecure: true,
+            passfield: true,
           ),
           Align(
             alignment: Alignment.centerRight,

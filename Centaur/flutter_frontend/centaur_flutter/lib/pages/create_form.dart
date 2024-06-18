@@ -36,18 +36,19 @@ String dropdownValue = list.first;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nuevo formulario', style: tituloStyle)
+        title: Text('Nuevo formulario', style: tituloStyle(context))
       ),
       body: SafeArea(
         child: Column(
         children: [
           TextField(
             controller: titulocontroller,
-            decoration: InputDecoration(hintText: 'Título'),
+            decoration: InputDecoration(hintText: 'Título (obligatiorio)'),
           ),
+
           TextField(
             controller: descriptioncontroller,
-            decoration: InputDecoration(hintText: 'Descripción'),
+            decoration: InputDecoration(hintText: 'Descripción (obligatorio)'),
           ),
           if (formFields.isNotEmpty)
             ...formFields.map((campo) => buildCampoWidget(campo)).toList(),
@@ -83,6 +84,9 @@ String dropdownValue = list.first;
                 }).toList(),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                ),
                 onPressed: (){
                   buildForm(dropdownValue);
                 }, 
@@ -91,6 +95,9 @@ String dropdownValue = list.first;
             ],
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+            ),
             onPressed: () async {
               var authRes = await enviarDatosAlFormulario(
                   titulocontroller.text, descriptioncontroller.text, formFields);
@@ -103,6 +110,9 @@ String dropdownValue = list.first;
                       content: Text('Formulario no se ha guardado'),
                       actions: [
                         TextButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                          ),
                           onPressed: () {
                             Navigator.pop(context);
                           },
@@ -121,6 +131,9 @@ String dropdownValue = list.first;
                       content: Text('Formulario guardado correctamente'),
                       actions: [
                         TextButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                          ),
                           onPressed: () {
                             
                             Navigator.push(
@@ -177,6 +190,9 @@ String dropdownValue = list.first;
               ),
               actions: [
                 TextButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                  ),
                   onPressed: (){
                     final fieldName = textfieldcontroller.text;
                     var options = optionscontroller.text.split(',');

@@ -20,7 +20,7 @@ class _EditFormPageState extends State<EditFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Editar Formulario', style: tituloStyle)),
+      appBar: AppBar(title: Text('Editar Formulario', style: tituloStyle(context))),
       body: Column(
         children: [
           Expanded(
@@ -41,6 +41,9 @@ class _EditFormPageState extends State<EditFormPage> {
             ),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
             onPressed: () async {
               bool success = await updateFormFields(widget.formulario, widget.formFields);
               if (success) {
@@ -52,6 +55,9 @@ class _EditFormPageState extends State<EditFormPage> {
                       content: Text('Formulario actualizado correctamente'),
                       actions: [
                         TextButton(
+                          style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -70,6 +76,9 @@ class _EditFormPageState extends State<EditFormPage> {
                       content: Text('No se ha podido actualizar el formulario'),
                       actions: [
                         TextButton(
+                          style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -101,6 +110,7 @@ class _EditFormPageState extends State<EditFormPage> {
       ),
       trailing: IconButton(
         icon: Icon(Icons.delete),
+        iconSize: 24,
         onPressed: () {
           setState(() {
             widget.formFields?.removeAt(index);

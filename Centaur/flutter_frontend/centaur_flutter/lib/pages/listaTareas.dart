@@ -45,40 +45,46 @@ class _ListaTareasState extends State<ListaTareas> {
     
     return Scaffold(
       
-      body: Column(
-        children: [
-          Center(child: Text('Tareas', style: tituloStyle,)),
-          _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _tareas.isEmpty
-                  ? Column(
-                    children: [
-                      Center(child: Text('No hay Tareas disponibles')),
-                      
-                    ],
-                  )
-                  : Expanded(
-                    child: ListView.builder(
-                        itemCount: _tareas.length,
-                        itemBuilder: (context, index) {
-                          Tarea tarea = _tareas[index];
-                          return ListTile(
-                            title: Text(tarea.titulo),
-                            subtitle: Text(tarea.descripcion),
-                            trailing: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => TareaView(tarea: tarea)),
-                                      );
-                              },
-                              child: Text('Ver Tarea'),
-                            ),
-                          );
-                        },
-                      ),
-                  ),
-        ],
+      body: FocusableActionDetector(
+        focusNode: FocusNode(),
+        child: Column(
+          children: [
+            Center(child: Text('Tareas', style: tituloStyle(context),)),
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _tareas.isEmpty
+                    ? Column(
+                      children: [
+                        Center(child: Text('No hay Tareas disponibles')),
+                        
+                      ],
+                    )
+                    : Expanded(
+                      child: ListView.builder(
+                          itemCount: _tareas.length,
+                          itemBuilder: (context, index) {
+                            Tarea tarea = _tareas[index];
+                            return ListTile(
+                              title: Text(tarea.titulo),
+                              subtitle: Text(tarea.descripcion),
+                              trailing: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
+                                onPressed: () {
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => TareaView(tarea: tarea)),
+                                        );
+                                },
+                                child: Text('Ver Tarea ${tarea.titulo}'),
+                              ),
+                            );
+                          },
+                        ),
+                    ),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
@@ -11,6 +13,7 @@ import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:googleapis/calendar/v3.dart' as cal;
 
 void main() => runApp(const Calendar());
 
@@ -81,6 +84,20 @@ class _DatePickerExampleState extends State<DatePickerExample> {
   
   return correcto;
 }
+String getClientId() {
+  if (Platform.isAndroid) {
+    print('ANDROID!!!!');
+    return '222434467989-037v4j505upnivnj3fcc14asmukrhs6n.apps.googleusercontent.com';
+  } else if (Platform.isIOS) {
+    print('IOS!!!!');
+    return '222434467989-0sbti500hpetlujraim4ttedqob0ec99.apps.googleusercontent.com';
+  } else {
+    print('ORDENADOR!!!!');
+    return '222434467989-s47v1e75pho0ec2ut0qc3uqhq1r2ttg5.apps.googleusercontent.com';
+  }
+}
+
+
 
 
   Future<void> _insertEvent() async {
@@ -91,6 +108,7 @@ class _DatePickerExampleState extends State<DatePickerExample> {
       scopes: [
         'email',
         'https://www.googleapis.com/auth/calendar.events',
+        'https://www.googleapis.com/auth/calendar',
       ],
     );
 
@@ -112,11 +130,11 @@ class _DatePickerExampleState extends State<DatePickerExample> {
             DateTime.now().add(Duration(hours: 1)),  // token expiration time
           ),
           null,  // No refresh token available
-          [CalendarApi.calendarEventsScope],
+          [cal.CalendarApi.calendarEventsScope],
         ),
       );
 
-      final calendar = CalendarApi(authClient);
+      final calendar = cal.CalendarApi(authClient);
 
       Event event = Event()
         ..summary = titulo.text
@@ -162,19 +180,20 @@ Widget build(BuildContext context) {
   String? crea = user.username;
   return CupertinoPageScaffold(
     navigationBar: CupertinoNavigationBar(
-      middle: Text('Crear Tarea', style: tituloStyle,),
+      middle: Text('Crear Tarea', style: tituloStyle(context),),
     ),
     child: DefaultTextStyle(
-      style: defaultStyle,
+      style: defaultStyle(context),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
               children: [
-                Text('Nombre del evento:'),
+                Text('Nombre del evento*:'),
                 Expanded(
                   child: CupertinoTextField(
+                    style: normalStyle(context),
                     controller: titulo,
                   ),
                 ),
@@ -183,9 +202,10 @@ Widget build(BuildContext context) {
             SizedBox(height: 10),
             Row(
               children: [
-                Text('Descripción del evento:'),
+                Text('Descripción del evento*:'),
                 Expanded(
                   child: CupertinoTextField(
+                    style: normalStyle(context),
                     controller: descripcion,
                     maxLines: 10,
                     keyboardType: TextInputType.multiline,
@@ -202,7 +222,7 @@ Widget build(BuildContext context) {
             SizedBox(height: 10),
             _DatePickerItem(
               children: <Widget>[
-                const Text('Fecha de inicio'),
+                const Text('Fecha de inicio*'),
                 CupertinoButton(
                   onPressed: () => _showDialog(
                     CupertinoDatePicker(
@@ -226,7 +246,7 @@ Widget build(BuildContext context) {
             ),
             _DatePickerItem(
               children: <Widget>[
-                const Text('Fecha de finalización'),
+                const Text('Fecha de finalización*'),
                 CupertinoButton(
                   onPressed: () => _showDialog(
                     CupertinoDatePicker(
@@ -296,12 +316,15 @@ Widget build(BuildContext context) {
             ),
             SizedBox(height: 10.0,),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+              ), 
               onPressed: () async {
                 var auth = await crearTarea(titulo.text, descripcion.text, crea, dateStart, timeStart, dateEnd, timeEnd);
-
+                
                 print('AUTH!!!!!: $auth');
                 var correcto = comprobar_tiempos();
-
+                
                 if (auth == true && correcto == true) {
                   showCupertinoDialog(
                     context: context,
@@ -321,7 +344,7 @@ Widget build(BuildContext context) {
                               _insertEvent();
                               Navigator.pop(context); // Close the dialog after syncing
                             },
-                            child: Text('Sincronizar', style: normalStyle),
+                            child: Text('Sincronizar', style: normalStyle(context)),
                           ),
                         ],
                       );
@@ -332,14 +355,14 @@ Widget build(BuildContext context) {
                     context: context,
                     builder: (context) {
                       return CupertinoAlertDialog(
-                        title: Text('Error', style: normalStyle),
-                        content: Text('La tarea no se ha creado', style: normalStyle),
+                        title: Text('Error', style: normalStyle(context)),
+                        content: Text('La tarea no se ha creado', style: normalStyle(context)),
                         actions: [
                           CupertinoDialogAction(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text('Aceptar', style: normalStyle),
+                            child: Text('Aceptar', style: normalStyle(context)),
                           ),
                         ],
                       );
@@ -347,7 +370,7 @@ Widget build(BuildContext context) {
                   );
                 }
               },
-              child: Text('Crear', style: normalStyle),
+              child: Text('Crear', style: normalStyle(context)),
             ),
           ],
         ),

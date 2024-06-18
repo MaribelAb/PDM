@@ -49,23 +49,27 @@ class _SignInAgentState extends State<SignInAgent> {
         children: [
           Container(
             height: 200,
-            child: Image.asset('images/logo_claro.png'),
+            child: Image.asset('assets/images/logo_claro.png')
+
           ),
           SizedBox(height: 100),
           CustomField(
             controller: usernameController,
-            iconUrl: 'assets/icon_email.png',
-            hint: 'Nombre de usuario',
+            hint: 'Tu nombre de usuario',
+            passfield: false,
           ),
           CustomField(
             controller: passwordController,
-            iconUrl: 'assets/icon_password.png',
-            hint: 'Contraseña',
+            passfield: true,
+            hint: 'Tu contraseña',
             obsecure: true,
           ),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
+              style: ElevatedButton.styleFrom(
+    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+  ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -79,6 +83,9 @@ class _SignInAgentState extends State<SignInAgent> {
             ),
           ),
           CustomTextButton(
+            
+   
+
             onTap: () async {
               var authRes = await userAuth(usernameController.text, passwordController.text);
               if (authRes.runtimeType == String) {
@@ -131,7 +138,7 @@ class _SignInAgentState extends State<SignInAgent> {
                 }
               }
             },
-            title: 'Inicia Sesión',
+            title: 'Iniciar Sesión',
             margin: EdgeInsets.only(top: 50),
           ),
         ],
