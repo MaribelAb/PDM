@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:centaur_flutter/models/user_cubit.dart';
 import 'package:centaur_flutter/models/user_model.dart';
+import 'package:centaur_flutter/pages/home/admin_home.dart';
+import 'package:centaur_flutter/pages/home/agent_home.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -335,7 +337,19 @@ Widget build(BuildContext context) {
                         actions: [
                           CupertinoDialogAction(
                             onPressed: () {
-                              Navigator.pop(context);
+                              if(user.groups!.contains('Agent')){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AgentHome()),
+                                );
+                              }
+                              else{
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AdminHome()),
+                                );
+                              }
+                              
                             },
                             child: Text('No gracias'),
                           ),

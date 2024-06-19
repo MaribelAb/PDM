@@ -14,6 +14,7 @@ import 'package:centaur_flutter/theme.dart';
 //import 'package:centaur_flutter/pages/tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:centaur_flutter/pages/home/client_home.dart';
 
 void main() => runApp(const RellenarForm());
 
@@ -131,10 +132,13 @@ class RellenarFormPageState extends State<RellenarFormPage> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                              ),
                               onPressed: (){
-                                Navigator.pop(context);
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ClientHome()),
+                                );
                               }, 
                               child: Text('Aceptar'),
                             )
