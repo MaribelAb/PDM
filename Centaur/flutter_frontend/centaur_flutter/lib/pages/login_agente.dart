@@ -68,8 +68,8 @@ class _SignInAgentState extends State<SignInAgent> {
             alignment: Alignment.centerRight,
             child: TextButton(
               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                minimumSize: Size(24, 24), 
+              ),
               onPressed: () {
                 Navigator.push(
                   context,

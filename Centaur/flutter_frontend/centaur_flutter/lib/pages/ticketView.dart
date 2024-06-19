@@ -192,10 +192,9 @@ class _TicketViewPageState extends State<TicketViewPage> {
             if(user.groups!.contains('Client') == false)      
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                minimumSize: Size(24, 24),
+              ),
               onPressed: () async {
-                // Call the function to modify the ticket with the selected values
                 var resp = await modifyTicket(
                   ticket,
                   ticket.id,
@@ -216,8 +215,8 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24), 
+                              ),
                               onPressed: (){
                                 if (user.groups!.contains('Agent')){
                                   Navigator.push(
@@ -253,8 +252,8 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24), 
+                              ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 
@@ -271,8 +270,8 @@ class _TicketViewPageState extends State<TicketViewPage> {
             if(user.groups!.contains('Client'))
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                minimumSize: Size(24, 24), 
+              ),
               onPressed: (){
                 showDialog(
                     context: context, 
@@ -283,8 +282,8 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24), 
+                              ),
                               onPressed: (){
                                 showDialog(
                                   context: context, 
@@ -295,8 +294,8 @@ class _TicketViewPageState extends State<TicketViewPage> {
                                         actions: [
                                           ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                              minimumSize: Size(24, 24), 
+                                            ),
                                             onPressed: (){
                                               Navigator.push(
                                                 context,
@@ -316,8 +315,8 @@ class _TicketViewPageState extends State<TicketViewPage> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24), 
+                              ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

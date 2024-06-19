@@ -12,10 +12,10 @@ import 'package:centaur_flutter/pages/rellenarForm.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'tu_archivo.dart'; // Reemplaza "tu_archivo.dart" con el nombre de tu archivo que contiene la función getTickets
+
 
 class FormList extends StatefulWidget {
-  final String s; // Use final for immutable properties
+  final String s; 
 
   FormList(this.s, {super.key});
 
@@ -28,7 +28,7 @@ class _FormListState extends State<FormList> {
   bool _isLoading = true;
   String loc = '';
 
-  _FormListState(this.loc); // Proper constructor initialization
+  _FormListState(this.loc); 
 
   TextEditingController search = TextEditingController();
 
@@ -130,7 +130,7 @@ class _FormListState extends State<FormList> {
                                   visible: !cliente,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                      minimumSize: Size(24, 24), 
                                     ),
                                     onPressed: () async {
                                       var resp = await editarVisibilidad(formulario);
@@ -144,7 +144,7 @@ class _FormListState extends State<FormList> {
                                               actions: [
                                                 TextButton(
                                                   style: ElevatedButton.styleFrom(
-                                                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                                    minimumSize: Size(24, 24), 
                                                   ),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -166,7 +166,7 @@ class _FormListState extends State<FormList> {
                                               actions: [
                                                 TextButton(
                                                   style: ElevatedButton.styleFrom(
-                                                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                                    minimumSize: Size(24, 24), 
                                                   ),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -186,7 +186,7 @@ class _FormListState extends State<FormList> {
                                 subtitle: Text(sub),
                                 trailing: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                    minimumSize: Size(24, 24), 
                                   ),
                                   onPressed: () {
                                     Navigator.push(

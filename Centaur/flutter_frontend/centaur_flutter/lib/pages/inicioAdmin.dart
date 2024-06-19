@@ -46,7 +46,7 @@ class _AdminIniState extends State<AdminIni>{
             child: Expanded(
               child:  MediaQuery.of(context).size.width <= 640 
               ? Scrollbar(
-                controller: _horizontalScrollController, // <---- Here, the controller
+                controller: _horizontalScrollController, 
                 thumbVisibility: true,
                 trackVisibility: true, 
                 child: SingleChildScrollView(
@@ -68,7 +68,7 @@ class _AdminIniState extends State<AdminIni>{
                             DataCell(
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                  minimumSize: Size(24, 24), 
                                 ),
                                 onPressed: (){
                   
@@ -101,7 +101,7 @@ class _AdminIniState extends State<AdminIni>{
                           DataCell(
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                minimumSize: Size(24, 24),
                               ),
                               onPressed: (){
               

@@ -26,7 +26,7 @@ class _ViewLineChartState extends State<ViewLineChart> {
 
   Future<void> _loadTickets() async {
     try {
-      List<Ticket> tickets = await getTickets();  // Replace with your actual method to fetch tickets
+      List<Ticket> tickets = await getTickets();
       setState(() {
         _tickets = tickets;
         spots = _getOpenTicketsCountByDay(_tickets, DateTime.now().month);

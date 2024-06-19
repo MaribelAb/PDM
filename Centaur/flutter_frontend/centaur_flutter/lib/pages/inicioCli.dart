@@ -66,7 +66,7 @@ class _ClientIniState extends State<ClientIni>{
               children: [
                 SizedBox(height: 20,),
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: themeNotifier.isDarkTheme ? Color.fromARGB(255, 202, 153, 5) : Colors.amber,
@@ -88,7 +88,7 @@ class _ClientIniState extends State<ClientIni>{
                 ),
                 SizedBox(height: 10,),
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: themeNotifier.isDarkTheme ? Color.fromARGB(255, 202, 153, 5) : Colors.amber,
@@ -110,7 +110,7 @@ class _ClientIniState extends State<ClientIni>{
                 ),
                 SizedBox(height: 10,),
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: themeNotifier.isDarkTheme ? Color.fromARGB(255, 202, 153, 5) : Colors.amber,
@@ -136,7 +136,7 @@ class _ClientIniState extends State<ClientIni>{
             :Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: themeNotifier.isDarkTheme ? Color.fromARGB(255, 202, 153, 5) : Colors.amber,
@@ -157,7 +157,7 @@ class _ClientIniState extends State<ClientIni>{
                   ),
                 ),
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: themeNotifier.isDarkTheme ? Color.fromARGB(255, 202, 153, 5) : Colors.amber,
@@ -178,10 +178,10 @@ class _ClientIniState extends State<ClientIni>{
                   ),
                 ),
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: themeNotifier.isDarkTheme ? Color.fromARGB(255, 202, 153, 5) : Colors.amber, //
+                      backgroundColor: themeNotifier.isDarkTheme ? Color.fromARGB(255, 202, 153, 5) : Colors.amber, 
                       padding: EdgeInsets.only(top: 5, bottom: 5, right: 20, left: 20),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),

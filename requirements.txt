@@ -11,6 +11,7 @@ django-cors-headers==4.3.1
 djangorestframework==3.15.0
 djangorestframework-simplejwt==5.3.1
 dynamic-django-forms==0.1.11
+gunicorn
 idna==3.7
 libusb1==3.1.0
 mysqlclient==2.2.4

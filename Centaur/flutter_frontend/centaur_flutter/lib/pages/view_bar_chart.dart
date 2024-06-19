@@ -20,7 +20,7 @@ class _ViewBarChartState extends State<ViewBarChart> {
 
   Future<void> _loadTickets() async {
     try {
-      List<Ticket> tickets = await getTickets(); // Replace with your actual method to fetch tickets
+      List<Ticket> tickets = await getTickets(); 
       setState(() {
         _tickets = tickets;
         _isLoading = false;

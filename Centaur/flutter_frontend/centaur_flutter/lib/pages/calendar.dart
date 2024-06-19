@@ -118,7 +118,7 @@ String getClientId() {
     try {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        // User canceled the sign-in
+        
         return;
       }
       final googleAuth = await googleUser.authentication;
@@ -129,9 +129,9 @@ String getClientId() {
           auth.AccessToken(
             'Bearer',
             googleAuth.accessToken!,
-            DateTime.now().add(Duration(hours: 1)),  // token expiration time
+            DateTime.now().add(Duration(hours: 1)),
           ),
-          null,  // No refresh token available
+          null, 
           [cal.CalendarApi.calendarEventsScope],
         ),
       );
@@ -319,7 +319,7 @@ Widget build(BuildContext context) {
             SizedBox(height: 10.0,),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                minimumSize: Size(24, 24), 
               ), 
               onPressed: () async {
                 var auth = await crearTarea(titulo.text, descripcion.text, crea, dateStart, timeStart, dateEnd, timeEnd);
@@ -356,7 +356,7 @@ Widget build(BuildContext context) {
                           CupertinoDialogAction(
                             onPressed: () {
                               _insertEvent();
-                              Navigator.pop(context); // Close the dialog after syncing
+                              Navigator.pop(context); 
                             },
                             child: Text('Sincronizar', style: normalStyle(context)),
                           ),

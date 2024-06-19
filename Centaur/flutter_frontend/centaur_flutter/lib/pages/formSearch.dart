@@ -83,10 +83,10 @@ class FormSearchState extends State<FormSearch> {
                     Formulario formulario = filteredForms[index];
                     return ListTile(
                       leading: Visibility(
-                        visible: !cliente, // Show if cliente is false
+                        visible: !cliente, 
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                            minimumSize: Size(24, 24),
                           ),
                           onPressed: () async {
                             var resp = await editarVisibilidad(formulario);
@@ -99,7 +99,7 @@ class FormSearchState extends State<FormSearch> {
                                   actions: [
                                     TextButton(
                                       style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                        minimumSize: Size(24, 24), 
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -121,7 +121,7 @@ class FormSearchState extends State<FormSearch> {
                                   actions: [
                                     TextButton(
                                       style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                        minimumSize: Size(24, 24),
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -139,7 +139,7 @@ class FormSearchState extends State<FormSearch> {
                       title: Text(formulario.titulo),
                       trailing: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                          minimumSize: Size(24, 24), 
                         ),
                         onPressed: () {
                           Navigator.push(

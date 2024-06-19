@@ -85,7 +85,7 @@ String dropdownValue = list.first;
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                  minimumSize: Size(24, 24), 
                 ),
                 onPressed: (){
                   buildForm(dropdownValue);
@@ -96,7 +96,7 @@ String dropdownValue = list.first;
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+              minimumSize: Size(24, 24), 
             ),
             onPressed: () async {
               var authRes = await enviarDatosAlFormulario(
@@ -111,7 +111,7 @@ String dropdownValue = list.first;
                       actions: [
                         TextButton(
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                            minimumSize: Size(24, 24), 
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -132,7 +132,7 @@ String dropdownValue = list.first;
                       actions: [
                         TextButton(
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                            minimumSize: Size(24, 24), 
                           ),
                           onPressed: () {
                             
@@ -191,7 +191,7 @@ String dropdownValue = list.first;
               actions: [
                 TextButton(
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                    minimumSize: Size(24, 24), 
                   ),
                   onPressed: (){
                     final fieldName = textfieldcontroller.text;

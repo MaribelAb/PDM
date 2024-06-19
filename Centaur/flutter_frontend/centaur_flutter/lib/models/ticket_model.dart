@@ -37,14 +37,12 @@ class Ticket{
 
     List<Contenido>? contenidoList;
   if (json['contenido'] != null) {
-    // Check if the "contenido" field is not null
     if (json['contenido'] is List) {
-      // Check if "contenido" is a list
+
       contenidoList = (json['contenido'] as List)
           .map((contenidoJson) => Contenido.fromJson(contenidoJson))
           .toList();
     } else {
-      // If "contenido" is not a list, create a single Contenido object
       contenidoList = [Contenido.fromJson(json['contenido'])];
     }
   }

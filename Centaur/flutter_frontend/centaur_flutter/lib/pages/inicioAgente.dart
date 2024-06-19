@@ -6,9 +6,9 @@ import 'package:centaur_flutter/pages/ticketView.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:provider/provider.dart'; // Make sure you have this package in your pubspec.yaml
+import 'package:provider/provider.dart'; 
 import 'package:centaur_flutter/pages/themenot.dart';
-import 'package:centaur_flutter/api/auth/auth_api.dart'; // Import your logout function7
+import 'package:centaur_flutter/api/auth/auth_api.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
 

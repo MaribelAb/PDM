@@ -42,7 +42,7 @@ class _EditFormPageState extends State<EditFormPage> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+    minimumSize: Size(24, 24), 
   ),
             onPressed: () async {
               bool success = await updateFormFields(widget.formulario, widget.formFields);
@@ -56,7 +56,7 @@ class _EditFormPageState extends State<EditFormPage> {
                       actions: [
                         TextButton(
                           style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+    minimumSize: Size(24, 24),  
   ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -77,7 +77,7 @@ class _EditFormPageState extends State<EditFormPage> {
                       actions: [
                         TextButton(
                           style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+    minimumSize: Size(24, 24), 
   ),
                           onPressed: () {
                             Navigator.of(context).pop();

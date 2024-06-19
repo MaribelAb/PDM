@@ -36,7 +36,6 @@ class _TicketListState extends State<TicketList> {
   void initState() {
     super.initState();
     misTickets = widget.misTickets;
-    // Initialize the date range with default values
     fechaIni = DateTime.now().subtract(Duration(days: 7));
     fechaFin = DateTime.now();
     _loadTickets();
@@ -190,8 +189,8 @@ class _TicketListState extends State<TicketList> {
                                         children: [
                                           TextButton(
                                             style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                              minimumSize: Size(24, 24), 
+                                            ),
                                             onPressed: () async {
                                               final DateTime? pickedStart = await showDatePicker(
                                                 context: context,
@@ -213,8 +212,8 @@ class _TicketListState extends State<TicketList> {
                                           ),
                                           TextButton(
                                             style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                              minimumSize: Size(24, 24),
+                                            ),
                                             onPressed: () async {
                                               final DateTime? pickedEnd = await showDatePicker(
                                                 context: context,
@@ -317,8 +316,8 @@ class _TicketListState extends State<TicketList> {
         DataCell(
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(24.0, 24) // Tamaño de 24x24 o más
-  ),
+              minimumSize: Size(24.0, 24)
+            ),
             onPressed: () {
               Navigator.push(
                 context,

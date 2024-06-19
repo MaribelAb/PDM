@@ -54,7 +54,7 @@ class IndexPage extends StatelessWidget {
               children: [
                 
                 SizedBox(
-                  width: 200, // Adjust the width as needed
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
@@ -80,7 +80,7 @@ class IndexPage extends StatelessWidget {
                 ),
 
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
@@ -114,7 +114,7 @@ class IndexPage extends StatelessWidget {
               children: [
                 
                 SizedBox(
-                  width: 200, // Adjust the width as needed
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(24, 24),
@@ -139,7 +139,7 @@ class IndexPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10,),
                 SizedBox(
-                  width: 200, // Same width as above
+                  width: 200, 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(24, 24),

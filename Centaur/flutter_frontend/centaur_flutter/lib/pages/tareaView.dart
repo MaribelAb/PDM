@@ -60,8 +60,8 @@ class _TareaViewState extends State<TareaView> {
                
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                minimumSize: Size(24, 24),
+              ),
               onPressed: () async {
                
                 var resp = true;
@@ -76,8 +76,8 @@ class _TareaViewState extends State<TareaView> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24),
+                              ),
                               onPressed: (){
                                 if (user.groups!.contains('Agent')){
                                   Navigator.push(
@@ -113,8 +113,8 @@ class _TareaViewState extends State<TareaView> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24),
+                              ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

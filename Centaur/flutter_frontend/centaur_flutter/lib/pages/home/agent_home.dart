@@ -42,7 +42,7 @@ class _AgentHomeState extends State<AgentHome> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-      child: Center( // Centra el contenido horizontalmente
+      child: Center( 
         child: Container(
           margin: EdgeInsets.all(1.0),
           decoration: BoxDecoration(
@@ -93,8 +93,8 @@ class _AgentHomeState extends State<AgentHome> {
           SizedBox(height: 10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+              minimumSize: Size(24, 24),
+            ),
             onPressed: () {
               Navigator.push(
                 context,

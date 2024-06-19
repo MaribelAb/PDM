@@ -90,12 +90,12 @@ Future<List<String?>?> getAgentUsers() async {
  
 
   if (res.statusCode == 200) {
-    // Parse the JSON response
+    
     Map<String, dynamic> data = json.decode(res.body);
-    // Extract the usernames from the string
+ 
     String usernamesString = data['usernames'];
     List<dynamic> usernamesList = json.decode(usernamesString);
-    // Convert the dynamic list to a list of strings
+   
     List<String?>? usernames = usernamesList.map((username) => username.toString()).toList();
     return usernames;
   } else {
@@ -112,12 +112,12 @@ Future<List<String?>?> getClientUsers() async {
  
 
   if (res.statusCode == 200) {
-    // Parse the JSON response
+
     Map<String, dynamic> data = json.decode(res.body);
-    // Extract the usernames from the string
+
     String usernamesString = data['usernames'];
     List<dynamic> usernamesList = json.decode(usernamesString);
-    // Convert the dynamic list to a list of strings
+ 
     List<String?>? usernames = usernamesList.map((username) => username.toString()).toList();
     return usernames;
   } else {
@@ -257,7 +257,7 @@ Future<Map<String, dynamic>> getTicketChoices() async {
   if (res.statusCode == 200) {
     return jsonDecode(res.body);
   } else {
-    // Handle error response
+
     throw Exception('Failed to load ticket choices');
   }
 }
@@ -307,7 +307,7 @@ Future<bool> modifyTicket(Ticket tick, int? ident, String? tit, String? desc, St
       return false;
     }
   } catch (error) {
-    // Manejar cualquier error que ocurra durante la solicitud
+
     print('Error making PUT request: $error');
     return false;
   }
@@ -384,7 +384,6 @@ Future<bool> crearTarea(String titulo, String descripcion, String ? creador, Dat
   String formattedFechaIni = DateFormat('yyyy-MM-dd').format(fecha_ini);
   String formattedFechaFin = DateFormat('yyyy-MM-dd').format(fecha_fin);
 
-  // Format time strings in 'HH:mm:ss' format
   String formattedHoraIni = DateFormat('HH:mm:ss').format(hora_ini);
   String formattedHoraFin = DateFormat('HH:mm:ss').format(hora_fin);
   final Map<String, dynamic> datos = {
@@ -416,12 +415,12 @@ Future<bool> crearTarea(String titulo, String descripcion, String ? creador, Dat
       return hecho;
     } else {
       print('Error al crear la tarea: ${response.body}');
-      // Handle other status codes if needed
+
       throw Exception('Error al crear la tarea: ${response.body}');
     }
   } catch (e) {
     print('Error inesperado: $e');
-    // Handle unexpected errors
+
     throw Exception('Error inesperado al crear la tarea');
   }
 }
@@ -443,20 +442,20 @@ Future<List<Tarea>> obtenerTareas() async {
 Future<bool> logout() async {
   final String apiUrl = 'http://localhost:8000/user/auth/logout/';
   bool logged_out = false;
-  // Send POST request to log out
+
   final response = await http.post(
     Uri.parse(apiUrl),
-    // You may need to include any required headers here, such as authentication tokens
+
   );
 
-  // Check if the request was successful
+
   if (response.statusCode == 200) {
-    // Log out was successful
+
     print('Logged out successfully');
     logged_out = true;
     return logged_out;
   } else {
-    // Log out failed, handle error
+
     print('Failed to log out. Status code: ${response.statusCode}');
     print('Response body: ${response.body}');
     return logged_out;
@@ -495,7 +494,7 @@ Future <bool> editarVisibilidad(Formulario form) async {
       return false;
     }
   } catch (error) {
-    // Manejar cualquier error que ocurra durante la solicitud
+
     print('Error making PUT request: $error');
     return false;
   }

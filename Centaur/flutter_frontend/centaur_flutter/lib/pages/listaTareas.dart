@@ -7,7 +7,6 @@ import 'package:centaur_flutter/pages/tareaView.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'tu_archivo.dart'; // Reemplaza "tu_archivo.dart" con el nombre de tu archivo que contiene la función getTickets
 
 class ListaTareas extends StatefulWidget {
   @override
@@ -69,8 +68,8 @@ class _ListaTareasState extends State<ListaTareas> {
                               subtitle: Text(tarea.descripcion),
                               trailing: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                  minimumSize: Size(24, 24),
+                                ),
                                 onPressed: () {
                                   Navigator.push(
                                           context,

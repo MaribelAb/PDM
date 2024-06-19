@@ -36,7 +36,6 @@ class RellenarForm extends StatelessWidget {
   }
 }
 
-// Create a Form widget.
 class RellenarFormPage extends StatefulWidget {
   final Formulario form;
   RellenarFormPage({Key? key, required this.form}) : super(key: key);
@@ -45,8 +44,7 @@ class RellenarFormPage extends StatefulWidget {
   RellenarFormPageState createState() => RellenarFormPageState();
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
+
 class RellenarFormPageState extends State<RellenarFormPage> {
   final _formKey = GlobalKey<FormState>();
   late Formulario formulario;
@@ -115,8 +113,8 @@ class RellenarFormPageState extends State<RellenarFormPage> {
             
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                minimumSize: Size(24, 24),
+              ),
               onPressed: () async {
                 if(cliente){
                   var campoTexto = extractTextValues(textControllers);
@@ -132,7 +130,7 @@ class RellenarFormPageState extends State<RellenarFormPage> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24), // Tamaño de 24x24 o más
+                                minimumSize: Size(24, 24),
                               ),
                               onPressed: (){
                                Navigator.push(
@@ -156,8 +154,8 @@ class RellenarFormPageState extends State<RellenarFormPage> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+                                minimumSize: Size(24, 24), 
+                              ),
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

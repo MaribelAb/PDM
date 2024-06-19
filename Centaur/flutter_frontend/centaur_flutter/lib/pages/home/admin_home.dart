@@ -201,8 +201,8 @@ class _AdminHomeState extends State<AdminHome> {
           SizedBox(height:10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+              minimumSize: Size(24, 24), 
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -367,8 +367,8 @@ class _AdminHomeState extends State<AdminHome> {
           SizedBox(height:10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-    minimumSize: Size(24, 24), // Tamaño de 24x24 o más
-  ),
+              minimumSize: Size(24, 24),
+            ),
             onPressed: () {
               Navigator.push(
                 context,

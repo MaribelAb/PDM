@@ -20,10 +20,10 @@ class LogoutPage extends StatelessWidget {
 Widget build(BuildContext context) {
   final themeNotifier = Provider.of<ThemeNotifier>(context);
   const String appTitle = 'Centaur: cerrar sesion';
-  return Center( // Center the content vertically and horizontally
+  return Center(  
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center the content vertically
-          crossAxisAlignment: CrossAxisAlignment.center, // Center the content horizontally
+          mainAxisAlignment: MainAxisAlignment.center, 
+          crossAxisAlignment: CrossAxisAlignment.center, 
           children: <Widget>[
             Container(
               child: Padding(

@@ -3,7 +3,7 @@ import 'package:centaur_flutter/pages/index_page.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:provider/provider.dart'; // Make sure you have this package in your pubspec.yaml
+import 'package:provider/provider.dart';
 import 'package:centaur_flutter/pages/themenot.dart';
 class Configuracion extends StatefulWidget{
   @override
@@ -15,8 +15,8 @@ class _ConfiguracionState extends State<Configuracion> {
     bool _isDarkTheme = false;
   
   void _logout() async {
-    // Implement your logout logic here
-    await logout(); // Assuming you have a logout function in your auth API
+  
+    await logout();
     Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => IndexPage()),

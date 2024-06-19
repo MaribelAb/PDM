@@ -86,7 +86,7 @@ class _SignUpClientState extends State<SignUpClient> {
               );
 
               if (authRes[0] == null) {
-                // Registration failed, display error message
+                
                 showDialog(
                   context: context,
                   builder: (context) {
@@ -102,7 +102,7 @@ class _SignUpClientState extends State<SignUpClient> {
                   },
                 );
               } else {
-                // Registration successful
+                
                 if (authRes[0] is User) {
                   User user = authRes[0] as User;
                   List<String> groupnames = ['Client'];
