@@ -12,6 +12,7 @@ import 'package:centaur_flutter/pages/rellenarForm.dart';
 import 'package:centaur_flutter/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:centaur_flutter/pages/home/admin_home.dart';
 
 
 class FormList extends StatefulWidget {
@@ -129,9 +130,7 @@ class _FormListState extends State<FormList> {
                                 leading: Visibility(
                                   visible: !cliente,
                                   child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(24, 24), 
-                                    ),
+                                    
                                     onPressed: () async {
                                       var resp = await editarVisibilidad(formulario);
                                       if (resp) {
@@ -143,11 +142,12 @@ class _FormListState extends State<FormList> {
                                               content: Text('Visibilidad cambiada de forma exitosa'),
                                               actions: [
                                                 TextButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    minimumSize: Size(24, 24), 
-                                                  ),
+                                                  
                                                   onPressed: () {
-                                                    Navigator.pop(context);
+                                                    Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => AdminHome()),
+                                        );
                                                     setState(() {});
                                                   },
                                                   child: Text('Aceptar'),
@@ -165,9 +165,7 @@ class _FormListState extends State<FormList> {
                                               content: Text('No se ha podido cambiar la visibilidad'),
                                               actions: [
                                                 TextButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    minimumSize: Size(24, 24), 
-                                                  ),
+                                                  
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -185,9 +183,7 @@ class _FormListState extends State<FormList> {
                                 title: Text(formulario.titulo),
                                 subtitle: Text(sub),
                                 trailing: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(24, 24), 
-                                  ),
+                                  
                                   onPressed: () {
                                     Navigator.push(
                                       context,

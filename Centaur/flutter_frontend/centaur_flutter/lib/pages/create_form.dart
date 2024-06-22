@@ -84,9 +84,7 @@ String dropdownValue = list.first;
                 }).toList(),
               ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(24, 24), 
-                ),
+                
                 onPressed: (){
                   buildForm(dropdownValue);
                 }, 
@@ -95,9 +93,7 @@ String dropdownValue = list.first;
             ],
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(24, 24), 
-            ),
+            
             onPressed: () async {
               var authRes = await enviarDatosAlFormulario(
                   titulocontroller.text, descriptioncontroller.text, formFields);
@@ -110,9 +106,7 @@ String dropdownValue = list.first;
                       content: Text('Formulario no se ha guardado'),
                       actions: [
                         TextButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(24, 24), 
-                          ),
+                          
                           onPressed: () {
                             Navigator.pop(context);
                           },
@@ -131,9 +125,7 @@ String dropdownValue = list.first;
                       content: Text('Formulario guardado correctamente'),
                       actions: [
                         TextButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(24, 24), 
-                          ),
+                          
                           onPressed: () {
                             
                             Navigator.push(
@@ -190,9 +182,7 @@ String dropdownValue = list.first;
               ),
               actions: [
                 TextButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(24, 24), 
-                  ),
+                  
                   onPressed: (){
                     final fieldName = textfieldcontroller.text;
                     var options = optionscontroller.text.split(',');

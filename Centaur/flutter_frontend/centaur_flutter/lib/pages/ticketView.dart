@@ -191,9 +191,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
             SizedBox(height: 8),
             if(user.groups!.contains('Client') == false)      
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(24, 24),
-              ),
+              
               onPressed: () async {
                 var resp = await modifyTicket(
                   ticket,
@@ -214,9 +212,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           content: Text('Ticket modificado correctamente'),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24), 
-                              ),
+                              
                               onPressed: (){
                                 if (user.groups!.contains('Agent')){
                                   Navigator.push(
@@ -251,9 +247,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           content: Text('No se ha podido modificar el ticket'),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24), 
-                              ),
+                              
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 
@@ -269,9 +263,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
             ),
             if(user.groups!.contains('Client'))
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(24, 24), 
-              ),
+              
               onPressed: (){
                 showDialog(
                     context: context, 
@@ -281,9 +273,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
                           content: Text('Este ticket se va a marcar como cerrado'),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24), 
-                              ),
+                              
                               onPressed: (){
                                 showDialog(
                                   context: context, 
@@ -293,9 +283,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
                                         content: Text('Ticket marcado como cerrado'),
                                         actions: [
                                           ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              minimumSize: Size(24, 24), 
-                                            ),
+                                            
                                             onPressed: (){
                                               Navigator.push(
                                                 context,
@@ -314,9 +302,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
                               child: Text('Sí, marcar como cerrado'),
                             ),
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24), 
-                              ),
+                              
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

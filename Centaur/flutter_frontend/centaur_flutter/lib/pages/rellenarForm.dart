@@ -112,9 +112,7 @@ class RellenarFormPageState extends State<RellenarFormPage> {
             padding: const EdgeInsets.symmetric(vertical: 16),
             
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(24, 24),
-              ),
+              
               onPressed: () async {
                 if(cliente){
                   var campoTexto = extractTextValues(textControllers);
@@ -129,9 +127,7 @@ class RellenarFormPageState extends State<RellenarFormPage> {
                           content: Text('Ticket enviado correctamente. Siga el estado del ticket en "Mis tickets".'),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24),
-                              ),
+                              
                               onPressed: (){
                                Navigator.push(
                                   context,
@@ -153,9 +149,7 @@ class RellenarFormPageState extends State<RellenarFormPage> {
                           content: Text('No se ha podido crear el ticket'),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24), 
-                              ),
+                              
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

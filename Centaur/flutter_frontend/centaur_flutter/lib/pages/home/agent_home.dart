@@ -92,9 +92,7 @@ class _AgentHomeState extends State<AgentHome> {
           ),
           SizedBox(height: 10),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(24, 24),
-            ),
+            
             onPressed: () {
               Navigator.push(
                 context,

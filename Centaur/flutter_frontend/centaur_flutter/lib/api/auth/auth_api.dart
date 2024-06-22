@@ -20,7 +20,7 @@ Future<dynamic> userAuth(String username, String password) async{
     "password": password
 
   };
-  var url = Uri.parse("http://localhost:8000/user/api-token-auth/");
+  var url = Uri.parse("http://10.0.2.2:8000/user/api-token-auth/");
   var res = await http.post(
     url,
     headers: {
@@ -152,7 +152,7 @@ Future<List<dynamic>> registerUser(String username, String email, String passwor
     "password2": confirmPasswd,
   };
 
-  var url = Uri.parse('http://localhost:8000/user/auth/registration/');
+  var url = Uri.parse('http://10.0.2.2:8000/user/auth/registration/');
   var res = await http.post(url, body: data);
   //print(res.body);
 
@@ -184,7 +184,7 @@ Future<List<dynamic>> registerUser(String username, String email, String passwor
 
 Future<List<Ticket>> getTickets() async {
   List<Ticket> tickets = [];
-  var url = Uri.parse("http://localhost:8000/user/getTicket/");
+  var url = Uri.parse("http://10.0.2.2:8000/user/getTicket/");
   var res = await http.get(url, headers: {
     'Authorization': 'Token $tokenBox',
   });
@@ -222,7 +222,7 @@ Future<bool?> createTicket(Formulario form, User user, Map<int, String> campo_te
     'fecha_creacion' : formattedFechaCrea,
   };
   
-  var url = Uri.parse('http://localhost:8000/user/postTicket/'); // Replace with your backend URL
+  var url = Uri.parse('http://10.0.2.2:8000/user/postTicket/'); // Replace with your backend URL
   try {
     http.Response response = await http.post(
       url,
@@ -249,7 +249,7 @@ Future<bool?> createTicket(Formulario form, User user, Map<int, String> campo_te
 }
 
 Future<Map<String, dynamic>> getTicketChoices() async {
-  var url = Uri.parse('http://localhost:8000/user/getChoices/');
+  var url = Uri.parse('http://10.0.2.2:8000/user/getChoices/');
   var res = await http.get(url, headers: {
     'Authorization': 'Token $tokenBox',
   });
@@ -283,7 +283,7 @@ Future<bool> modifyTicket(Ticket tick, int? ident, String? tit, String? desc, St
   };
   String jsonData = jsonEncode(data);
 
-  var url = Uri.parse('http://localhost:8000/user/updateTicket/');
+  var url = Uri.parse('http://10.0.2.2:8000/user/updateTicket/');
   
   try {
     http.Response response = await http.put(
@@ -345,7 +345,7 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Cam
     }
   }
 
-  final String apiUrl = 'http://localhost:8000/user/createForm/';
+  final String apiUrl = 'http://10.0.2.2:8000/user/createForm/';
 
   final response = await http.post(
     Uri.parse(apiUrl),
@@ -366,7 +366,7 @@ Future<bool> enviarDatosAlFormulario(String titulo, String descripcion, List<Cam
 }
 
 Future<List<Formulario>> obtenerFormularios() async {
-  final String apiUrl = 'http://localhost:8000/user/getForm/';
+  final String apiUrl = 'http://10.0.2.2:8000/user/getForm/';
   final response = await http.get(Uri.parse(apiUrl));
 
   if (response.statusCode == 200) {
@@ -396,7 +396,7 @@ Future<bool> crearTarea(String titulo, String descripcion, String ? creador, Dat
     'hora_fin': formattedHoraFin,
   };
 
-  final String apiUrl = 'http://localhost:8000/user/crearTarea/';
+  final String apiUrl = 'http://10.0.2.2:8000/user/crearTarea/';
   bool hecho = false;
   
   try {
@@ -426,7 +426,7 @@ Future<bool> crearTarea(String titulo, String descripcion, String ? creador, Dat
 }
 
 Future<List<Tarea>> obtenerTareas() async {
-  final String apiUrl = 'http://localhost:8000/user/getTarea';
+  final String apiUrl = 'http://10.0.2.2:8000/user/getTarea';
   final response = await http.get(Uri.parse(apiUrl));
   if (response.statusCode == 200) {
     final jsonData = json.decode(response.body);
@@ -440,7 +440,7 @@ Future<List<Tarea>> obtenerTareas() async {
 }
 
 Future<bool> logout() async {
-  final String apiUrl = 'http://localhost:8000/user/auth/logout/';
+  final String apiUrl = 'http://10.0.2.2:8000/user/auth/logout/';
   bool logged_out = false;
 
   final response = await http.post(
@@ -470,7 +470,7 @@ Future <bool> editarVisibilidad(Formulario form) async {
   };
   String jsonData = jsonEncode(data);
 
-  var url = Uri.parse('http://localhost:8000/user/updateFormVis/');
+  var url = Uri.parse('http://10.0.2.2:8000/user/updateFormVis/');
   
   try {
     http.Response response = await http.put(
@@ -501,7 +501,7 @@ Future <bool> editarVisibilidad(Formulario form) async {
 }
 
 Future <bool> updateFormFields(Formulario? form, List<Campo>? campos) async {
-  final url = 'http://localhost:8000/user/updateForm/';
+  final url = 'http://10.0.2.2:8000/user/updateForm/';
   form?.campos = campos;
   List<Map<String, dynamic>> fieldsData = campos!.map((campo) {
     return {

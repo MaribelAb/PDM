@@ -318,9 +318,7 @@ Widget build(BuildContext context) {
             ),
             SizedBox(height: 10.0,),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(24, 24), 
-              ), 
+              
               onPressed: () async {
                 var auth = await crearTarea(titulo.text, descripcion.text, crea, dateStart, timeStart, dateEnd, timeEnd);
                 

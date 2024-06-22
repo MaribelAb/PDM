@@ -67,9 +67,7 @@ class _AdminIniState extends State<AdminIni>{
                             DataCell(Text(usuario?.groups.toString() ?? 'N/A')),
                             DataCell(
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(24, 24), 
-                                ),
+                                
                                 onPressed: (){
                   
                                 }, 
@@ -100,9 +98,7 @@ class _AdminIniState extends State<AdminIni>{
                           DataCell(Text(usuario?.groups.toString() ?? 'N/A')),
                           DataCell(
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24),
-                              ),
+                              
                               onPressed: (){
               
                               }, 

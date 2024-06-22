@@ -188,9 +188,7 @@ class _TicketListState extends State<TicketList> {
                                       Column(
                                         children: [
                                           TextButton(
-                                            style: ElevatedButton.styleFrom(
-                                              minimumSize: Size(24, 24), 
-                                            ),
+                                            
                                             onPressed: () async {
                                               final DateTime? pickedStart = await showDatePicker(
                                                 context: context,
@@ -211,9 +209,7 @@ class _TicketListState extends State<TicketList> {
                                             ),
                                           ),
                                           TextButton(
-                                            style: ElevatedButton.styleFrom(
-                                              minimumSize: Size(24, 24),
-                                            ),
+                                           
                                             onPressed: () async {
                                               final DateTime? pickedEnd = await showDatePicker(
                                                 context: context,
@@ -315,9 +311,7 @@ class _TicketListState extends State<TicketList> {
         DataCell(Text(ticket.estado ?? 'N/A')),
         DataCell(
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(24.0, 24)
-            ),
+            
             onPressed: () {
               Navigator.push(
                 context,

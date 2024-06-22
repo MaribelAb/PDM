@@ -59,9 +59,7 @@ class _TareaViewState extends State<TareaView> {
             Text('Fecha de fin: ${tarea.fecha_fin.toString()}'),
                
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(24, 24),
-              ),
+              
               onPressed: () async {
                
                 var resp = true;
@@ -75,9 +73,7 @@ class _TareaViewState extends State<TareaView> {
                           content: Text('Tarea modificada correctamente'),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24),
-                              ),
+                              
                               onPressed: (){
                                 if (user.groups!.contains('Agent')){
                                   Navigator.push(
@@ -112,9 +108,7 @@ class _TareaViewState extends State<TareaView> {
                           content: Text('No se ha podido modificar la tarea'),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(24, 24),
-                              ),
+                              
                               onPressed: (){
                                 Navigator.pop(context);
                               }, 

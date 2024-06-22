@@ -67,16 +67,14 @@ class _ListaTareasState extends State<ListaTareas> {
                               title: Text(tarea.titulo),
                               subtitle: Text(tarea.descripcion),
                               trailing: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(24, 24),
-                                ),
+                                
                                 onPressed: () {
                                   Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (context) => TareaView(tarea: tarea)),
                                         );
                                 },
-                                child: Text('Ver Tarea ${tarea.titulo}'),
+                                child: Text('Ver Tarea'),
                               ),
                             );
                           },

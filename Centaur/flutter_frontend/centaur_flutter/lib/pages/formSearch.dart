@@ -85,9 +85,7 @@ class FormSearchState extends State<FormSearch> {
                       leading: Visibility(
                         visible: !cliente, 
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(24, 24),
-                          ),
+                          
                           onPressed: () async {
                             var resp = await editarVisibilidad(formulario);
                             if (resp) {
@@ -98,9 +96,7 @@ class FormSearchState extends State<FormSearch> {
                                   content: Text('Visibilidad cambiada de forma exitosa'),
                                   actions: [
                                     TextButton(
-                                      style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(24, 24), 
-                                      ),
+                                      
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -120,9 +116,7 @@ class FormSearchState extends State<FormSearch> {
                                   content: Text('No se ha podido cambiar la visibilidad'),
                                   actions: [
                                     TextButton(
-                                      style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(24, 24),
-                                      ),
+                                      
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -138,9 +132,7 @@ class FormSearchState extends State<FormSearch> {
                       ),
                       title: Text(formulario.titulo),
                       trailing: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(24, 24), 
-                        ),
+                        
                         onPressed: () {
                           Navigator.push(
                             context,
