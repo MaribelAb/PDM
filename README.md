@@ -1,4 +1,4 @@
-# Centro de Atención al Usuario
+# Centaur: Software de Centro de Atención al Usuario
 
 ## Descripción del Proyecto
 
